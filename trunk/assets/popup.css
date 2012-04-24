@@ -1,0 +1,272 @@
+body {
+	position: relative;
+	overflow: hidden;
+	line-height: 1.4em;
+	font-size: 12px;
+	font-family: Verdana;
+	-webkit-user-select: none;
+}
+#page {
+	min-width: 286px;
+	min-height: 80px;
+	max-height: 400px;
+	padding-right: 15px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+tr {
+	color: #333;
+}
+tr:hover, tr.hover {
+	color: #f60;
+}
+tr.enable {
+	color: #f00;
+}
+td {
+	padding: 0 .4em;
+	cursor: pointer;
+	white-space: nowrap;
+}
+tr.nodata:hover {
+	color: #333;
+}
+tr.nodata td {
+	width: 286px;
+	height: 80px;
+	text-align: center;
+	vertical-align: middle;
+}
+.group {
+	height: 2em;
+	border-bottom: solid 1px #eee;
+	overflow: hidden;
+	line-height: 1.6em;
+	font-weight: bold;
+	vertical-align: bottom;
+	color: #000;
+}
+.checkbox {
+	display: inline-block;
+	width: 15px;
+	height: 13px;
+	margin-right: .4em;
+	background-repeat: no-repeat;
+	background-image: url("images/checkbox.png");
+}
+.checkbox.checked {
+	background-image: url("images/checked.png");
+}
+.options {
+	position: relative;
+	padding-top: .7em;
+	font-size: 12px;
+	text-align: center;
+}
+.options::after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.hidden {
+	display: none !important;
+}
+.transparent {
+	opacity: 0 !important;
+}
+#mask {
+	position: absolute;
+	z-index: 2;
+	top: 0;
+	left: 0;
+	overflow: hidden;
+}
+#fileInput {
+	position: absolute;
+	top: -100px;
+	left: 0;
+}
+#menu {
+	display: inline-block;
+	position: absolute;
+	z-index: 3;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	background-color: #fff;
+	border: solid 1px #ccc;
+	-webkit-border-radius: 2px;
+	-webkit-box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+}
+#menu li {
+	height: 2.2em;
+	padding: 0 .7em 0 2.2em;
+	background-repeat: no-repeat;
+	background-position: 5px 5px;
+	opacity: .3;
+	cursor: pointer;
+	line-height: 2.2em;
+	white-space: nowrap;
+}
+#menu li.active {
+	opacity: 1;
+}
+#menu li.active:hover {
+	background-color: #eee;
+}
+#addBtn {
+	background-image: url("images/add.png");
+}
+#addBtn.active:hover {
+	background-image: url("images/add_hover.png");
+}
+#editBtn {
+	background-image: url("images/edit.png");
+}
+#editBtn.active:hover {
+	background-image: url("images/edit_hover.png");
+}
+#trashBtn {
+	background-image: url("images/trash.png");
+}
+#trashBtn.active:hover {
+	background-image: url("images/trash_hover.png");
+}
+#backupBtn {
+	background-image: url("images/backup.png");
+}
+#backupBtn:hover {
+	background-image: url("images/backup_hover.png");
+}
+.options input {
+	width: 45%;
+	padding: 0 .1em;
+	border: solid 1px #ccc;
+	border-right-color: #aaa;
+	border-bottom-color: #aaa;
+	-webkit-border-radius: 2px;
+}
+.options input.error {
+	border: solid 1px #f77;
+	border-right-color: #f00;
+	border-bottom-color: #f00;
+}
+.options button {
+	-webkit-border-radius: 2px;
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+	background: -webkit-linear-gradient(#fafafa, #f4f4f4 40%, #e5e5e5);
+	border: 1px solid #aaa;
+	color: #444;
+	margin-bottom: 0px;
+	min-width: 5em;
+	padding: 3px 12px;
+}
+.options button:hover {
+	-webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.2);
+	background: #ebebeb -webkit-linear-gradient(#fefefe, #f8f8f8 40%, #e9e9e9);
+	border-color: #999;
+	color: #222;
+}
+.options button:active {
+	-webkit-box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.2);
+	background: #ebebeb -webkit-linear-gradient(#f4f4f4, #efefef 40%, #dcdcdc);
+	color: #333;
+}
+#showDefault, #showCurrent {
+	float: right;
+	clear: both;
+	cursor: pointer;
+}
+#addInputs {
+	height: 0;
+	overflow: hidden;
+	opacity: 0;
+	-webkit-transition: height .2s, opacity .6s;
+}
+#addInputs.expand {
+	height: 78px;
+	opacity: 1;
+}
+.tip {
+	padding: .2em .7em;
+	margin-bottom: .7em;
+	background-color: #fef1ec;
+	border: 1px solid #cd0a0a;
+	-webkit-border-radius: 4px;
+	-webkit-transition: opacity .46s;
+	text-align: center;
+	white-space: nowrap;
+	color: #cd0a0a;
+}
+.tip span {
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	background-image: url("images/close.png");
+	background-repeat: no-repeat;
+	overflow: hidden;
+	cursor: pointer;
+	opacity: .3;
+}
+.tip span:hover {
+	opacity: 1;
+}
+.tip i {
+	cursor: pointer;
+	text-decoration: underline;
+}
+#tempTip {
+	position: absolute;
+}
+
+#page::-webkit-scrollbar {
+    width: 12px;
+    overflow: visible;
+}
+#page::-webkit-scrollbar-thumb {
+    background-color: rgba(0,0,0,.2);
+    background-clip: padding-box;
+    min-height: 28px;
+    padding: 100px 0 0;
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,.1),inset 0 -1px 0 rgba(0,0,0,.07);
+    border: solid 2px transparent;
+}
+#page::-webkit-scrollbar-track {
+    background-clip: padding-box;
+}
+#page::-webkit-scrollbar-button {
+    height: 0;
+    width: 0;
+}
+#page::-webkit-scrollbar-track:hover {
+    background-color: rgba(0,0,0,.05);
+    box-shadow: inset 1px 0 0 rgba(0,0,0,.1);
+}
+#page::-webkit-scrollbar-track:active {
+    background-color: rgba(0,0,0,.05);
+    box-shadow: inset 1px 0 0 rgba(0,0,0,.14),inset -1px 0 0 rgba(0,0,0,.07);
+}
+#page::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0,0,0,.4);
+    box-shadow: inset 1px 1px 1px rgba(0,0,0,.25);
+}
+#page::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0,0,0,0.5);
+    box-shadow: inset 1px 1px 3px rgba(0,0,0,0.35);
+}
+#page::-webkit-scrollbar-track:hover {
+    background-color: rgba(0,0,0,.035);
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,.14),inset -1px -1px 0 rgba(0,0,0,.07);
+}
+#page::-webkit-scrollbar-corner {
+    background-clip: padding-box;
+    background-color: #f5f5f5;
+    box-shadow: inset 1px 1px 0 rgba(0,0,0,.14);
+}
+#page::-webkit-scrollbar-track-piece {
+    background-clip: padding-box;
+    background-color: #f5f5f5;
+    box-shadow: inset 1px 0 0 rgba(0,0,0,.14),inset -1px 0 0 rgba(0,0,0,.07);
+}
