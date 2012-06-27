@@ -22,4 +22,7 @@ define(function(require, exports) {
 
 	// 初始化时给出的提示信息
 	view.initInfoTip();
+
+	// 显示当前tab的IP
+	view.showCurrentIP();
 });

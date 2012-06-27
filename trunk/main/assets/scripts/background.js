@@ -84,6 +84,23 @@
 		}
 	};
 
+	// 获取实际访问的IP放入缓存
+	chrome.webRequest.onCompleted.addListener(function(details) {
+		data[details.tabId] = details.ip;
+		chrome.browserAction.setTitle({
+			title: details.ip,
+			tabId: details.tabId
+		});
+	}, {
+		urls: [ 'http://*/*', 'https://*/*' ],
+		types: [ 'main_frame' ]
+	});
+
+	// 关闭tab时消除缓存
+	chrome.tabs.onRemoved.addListener(function(tabId) {
+		delete data[tabId];
+	});
+
 })((function() {
 	var embed = document.createElement('embed');
 	embed.type = 'application/x-npapi-file-io';

@@ -72,6 +72,21 @@ define(function(require, exports) {
 	};
 
 	/**
+	 * 获取当前tab
+	 * @param callback 参数为当前tab
+	 */
+	exports.getCurrentTab = function(callback) {
+		chrome.tabs.query({
+			windowId: chrome.windows.WINDOW_ID_CURRENT,
+			active: true
+		}, function(tabs) {
+			if (tabs && tabs[0]) {
+				callback(tabs[0]);
+			}
+		});
+	};
+
+	/**
 	 * 文件是否存在
 	 */
 	exports.fileExists = util.fileExists;

@@ -143,6 +143,13 @@ define(function(require, exports) {
 	};
 
 	/**
+	 * 获取当前tab的IP
+	 */
+	exports.getIP = function(tabId) {
+		return model.get(tabId);
+	};
+
+	/**
 	 * 添加组
 	 */
 	exports.addGroup = model.addGroup;

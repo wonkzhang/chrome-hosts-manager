@@ -8,7 +8,7 @@
 	"description": "__MSG_appDesc__",
 	"incognito": "split",
 	"name": "__MSG_appName__",
-	"permissions": [ "proxy", "tabs" ],
+	"permissions": [ "proxy", "tabs", "webRequest", "webRequestBlocking", "http://*/*", "https://*/*" ],
 	"plugins": [ {
 		"path": "./plugins/npapi-file-io-32.dll"
 	}, {

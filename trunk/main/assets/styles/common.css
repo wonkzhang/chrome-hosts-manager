@@ -208,3 +208,7 @@ body {
 	padding-bottom: .2em;
 	text-align: center;
 }
+
+#currentIP {
+	text-align: center;
+}

@@ -290,31 +290,26 @@ define(function(require, exports) {
 			$('#content .hidden').removeClass('hidden');
 			isCurrent = false;
 		} else {
-			chrome.tabs.query({
-				windowId: chrome.windows.WINDOW_ID_CURRENT,
-				active: true
-			}, function(tabs) {
-				if (tabs && tabs[0]) {
-					var hostname = util.findHostname(tabs[0].url);
-					if (hostname) {
-						var data = biz.loadData(),
-						i, sum, toHide;
-						for (i in data) {
-							toHide = $();
-							sum = data[i].traverse(function() {
-								if (this.hostname != hostname) {
-									toHide = toHide.add(this.target);
-								}
-							});
-							if (sum == toHide.length) {
-								data[i].target.closest('.block').addClass('hidden');
-							} else {
-								toHide.addClass('hidden');
+			util.getCurrentTab(function(tab) {
+				var hostname = util.findHostname(tab.url);
+				if (hostname) {
+					var data = biz.loadData(),
+					i, sum, toHide;
+					for (i in data) {
+						toHide = $();
+						sum = data[i].traverse(function() {
+							if (this.hostname != hostname) {
+								toHide = toHide.add(this.target);
 							}
+						});
+						if (sum == toHide.length) {
+							data[i].target.closest('.block').addClass('hidden');
+						} else {
+							toHide.addClass('hidden');
 						}
-						isCurrent = true;
-						data = null;
 					}
+					isCurrent = true;
+					data = null;
 				}
 			});
 		}
@@ -335,6 +330,16 @@ define(function(require, exports) {
 		if (!chrome.benchmarking) {
 			tip.showInfoTip(util.i18n('recommendInfo'));
 		}
+	};
+
+	/**
+	 * 显示当前tab的IP
+	 */
+	exports.showCurrentIP = function() {
+		util.getCurrentTab(function(tab) {
+			var ip = biz.getIP(tab.id);
+			ip && $('#currentIP').html(util.i18n('currentTabIP') + ip);
+		});
 	};
 
 	/**
