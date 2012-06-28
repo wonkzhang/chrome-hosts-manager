@@ -105,7 +105,9 @@ define(function(require, exports) {
 				}
 			}
 			for (i in data) {
-				data[i].checkEnable();
+				if (i != 'error') {
+					data[i].checkEnable();
+				}
 			}
 		}
 		model.put('data', data);

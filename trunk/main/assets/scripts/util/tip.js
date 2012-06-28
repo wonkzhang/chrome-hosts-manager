@@ -46,7 +46,7 @@ define(function(require, exports) {
 	 * 显示错误信息
 	 */
 	exports.showErrorTip = function(text) {
-		if (currentTip != errorTip) {
+		if (currentTip != errorTip) { // 消除已有的提示信息
 			exports.close();
 			currentTip = errorTip;
 		}
@@ -57,18 +57,17 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * 显示错误信息
+	 * 显示提示信息
 	 */
 	exports.showInfoTip = function(text, fn) {
-		confirmFn = fn;
-		if (currentTip != infoTip) {
-			exports.close();
+		if (currentTip != errorTip) { // 有错误信息则无视提示信息
 			currentTip = infoTip;
+			confirmFn = fn;
+			clearTimeout(infoTip.data('timeout'));
+			infoTip.children().eq(0).text(text);
+			infoTip.css('left', (body.innerWidth() - infoTip.outerWidth()) / 2);
+			infoTip.addClass('tip-show').data('timeout', setTimeout(exports.close, 8000));
 		}
-		clearTimeout(infoTip.data('timeout'));
-		infoTip.children().eq(0).text(text);
-		infoTip.css('left', (body.innerWidth() - infoTip.outerWidth()) / 2);
-		infoTip.addClass('tip-show').data('timeout', setTimeout(exports.close, 8000));
 	};
 
 	/**
