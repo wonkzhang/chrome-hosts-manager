@@ -87,9 +87,21 @@
 	// 获取实际访问的IP放入缓存
 	chrome.webRequest.onCompleted.addListener(function(details) {
 		data[details.tabId] = details.ip;
-		chrome.browserAction.setTitle({
-			title: details.ip,
-			tabId: details.tabId
+		chrome.tabs.executeScript(details.tabId, {
+			code: '(function(){' +
+						'var ip=document.createElement("div");' +
+						'ip.innerHTML="' + details.ip + '";' +
+						'ip.className="chrome-hosts-manager-ipaddr";' +
+						'ip.title="' + chrome.i18n.getMessage('currentTabIP') +
+						chrome.i18n.getMessage('clickToHide') + '";' +
+						'document.body.appendChild(ip);' +
+						'ip.addEventListener("click",function(){' +
+							'ip.parentNode.removeChild(ip);' +
+						'});' +
+					'})()'
+		});
+		chrome.tabs.insertCSS(details.tabId, {
+			file: '/assets/styles/inject.css'
 		});
 	}, {
 		urls: [ 'http://*/*', 'https://*/*' ],
