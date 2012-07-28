@@ -1,28 +1,28 @@
 /**
- * ³õÊ¼»¯Ò³Ãæ
+ * åˆå§‹åŒ–é¡µé¢
  */
 define(function(require, exports) {
 
-	// ÊÓÍ¼Âß¼­
+	// è§†å›¾é€»è¾‘
 	var view = require('./handle/view.js');
 
-	// äÖÈ¾Í·
+	// æ¸²æŸ“å¤´
 	view.renderHead();
 
-	// °ó¶¨ÊÂ¼ş
+	// ç»‘å®šäº‹ä»¶
 	require('./bind.js');
 
-	// ¼ÓÔØÑùÊ½
+	// åŠ è½½æ ·å¼
 	require('../styles/common.css');
 	require('../styles/icons.css');
 	require('../styles/popup.css');
 	
-	// Ë¢ĞÂÊı¾İ
+	// åˆ·æ–°æ•°æ®
 	view.refresh(false);
 
-	// ³õÊ¼»¯Ê±¸ø³öµÄÌáÊ¾ĞÅÏ¢
+	// åˆå§‹åŒ–æ—¶ç»™å‡ºçš„æç¤ºä¿¡æ¯
 	view.initInfoTip();
 
-	// ÏÔÊ¾µ±Ç°tabµÄIP
+	// æ˜¾ç¤ºå½“å‰tabçš„IP
 	view.showCurrentIP();
 });

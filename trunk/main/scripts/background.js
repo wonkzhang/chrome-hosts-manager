@@ -1,10 +1,10 @@
 (function(embed, data) {
 
-	// Êı¾İÄ£ĞÍ
+	// æ•°æ®æ¨¡å‹
 	window.model = {
 
 		/**
-		 * ´æ´¢Êı¾İ
+		 * å­˜å‚¨æ•°æ®
 		 */
 		put: function(key, value) {
 			if (typeof value == 'string') {
@@ -15,14 +15,14 @@
 		},
 
 		/**
-		 * »ñÈ¡Êı¾İ
+		 * è·å–æ•°æ®
 		 */
 		get: function(key) {
 			return data[key] || localStorage.getItem(key);
 		},
 
 		/**
-		 * É¾³ıÊı¾İ
+		 * åˆ é™¤æ•°æ®
 		 */
 		remove: function(key) {
 			delete data[key];
@@ -30,7 +30,7 @@
 		},
 
 		/**
-		 * »ñÈ¡hostsÎÄ¼şÂ·¾¶
+		 * è·å–hostsæ–‡ä»¶è·¯å¾„
 		 */
 		getHostsPath: function() {
 			if (embed.getPlatform() == 'windows') {
@@ -41,7 +41,7 @@
 		},
 
 		/**
-		 * ±£´æÎÄ¼ş
+		 * ä¿å­˜æ–‡ä»¶
 		 * @param file
 		 * @param content
 		 */
@@ -50,7 +50,7 @@
 		},
 
 		/**
-		 * ¶ÁÈ¡ÎÄ¼ş
+		 * è¯»å–æ–‡ä»¶
 		 * @param file
 		 */
 		readFile: function(file) {
@@ -58,11 +58,11 @@
 		}
 	};
 
-	// ¹¤¾ß¼¯
+	// å·¥å…·é›†
 	window.util = {
 
 		/**
-		 * ÅĞ¶ÏÎÄ¼şÊÇ·ñ´æÔÚ
+		 * åˆ¤æ–­æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 		 */
 		fileExists: function(file) {
 			try {
@@ -73,7 +73,7 @@
 		},
 
 		/**
-		 * ÅĞ¶ÏÎÄ¼şÊÇ·ñÊÇÄ¿Â¼
+		 * åˆ¤æ–­æ–‡ä»¶æ˜¯å¦æ˜¯ç›®å½•
 		 */
 		isDirectory: function(file) {
 			try {
@@ -84,31 +84,35 @@
 		}
 	};
 
-	// »ñÈ¡Êµ¼Ê·ÃÎÊµÄIP·ÅÈë»º´æ
+	// è·å–å®é™…è®¿é—®çš„IPæ”¾å…¥ç¼“å­˜
 	chrome.webRequest.onCompleted.addListener(function(details) {
 		data[details.tabId] = details.ip;
 		chrome.tabs.executeScript(details.tabId, {
-			code: '(function(){' +
-						'var ip=document.createElement("div");' +
+			code: '(function(ip){' +
+					'if(ip){' +
 						'ip.innerHTML="' + details.ip + '";' +
-						'ip.className="chrome-hosts-manager-ipaddr";' +
+					'}else{' +
+						'ip=document.createElement("div");' +
+						'ip.innerHTML="' + details.ip + '";' +
+						'ip.id="chrome-hosts-manager-ipaddr";' +
 						'ip.title="' + chrome.i18n.getMessage('currentTabIP') +
-						chrome.i18n.getMessage('clickToHide') + '";' +
+								chrome.i18n.getMessage('clickToHide') + '";' +
 						'document.body.appendChild(ip);' +
 						'ip.addEventListener("click",function(){' +
 							'ip.parentNode.removeChild(ip);' +
 						'});' +
-					'})()'
+					'}' +
+				'})(document.getElementById("chrome-hosts-manager-ipaddr"))'
 		});
 		chrome.tabs.insertCSS(details.tabId, {
-			file: '/assets/styles/inject.css'
+			file: '/styles/inject.css'
 		});
 	}, {
 		urls: [ 'http://*/*', 'https://*/*' ],
 		types: [ 'main_frame' ]
 	});
 
-	// ¹Ø±ÕtabÊ±Ïû³ı»º´æ
+	// å…³é—­tabæ—¶æ¶ˆé™¤ç¼“å­˜
 	chrome.tabs.onRemoved.addListener(function(tabId) {
 		delete data[tabId];
 	});

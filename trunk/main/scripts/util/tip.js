@@ -1,5 +1,5 @@
 /**
- * µ¯³öÌáÊ¾
+ * å¼¹å‡ºæç¤º
  */
 define(function(require, exports) {
 
@@ -9,20 +9,20 @@ define(function(require, exports) {
 	// title
 	titleTip = $('#titleTip'),
 
-	// ´íÎóĞÅÏ¢
+	// é”™è¯¯ä¿¡æ¯
 	errorTip = $('#errorTip').removeClass('hidden'),
 
-	// ´íÎóĞÅÏ¢
+	// é”™è¯¯ä¿¡æ¯
 	infoTip = $('#infoTip').removeClass('hidden'),
 
-	// µ±Ç°ĞÅÏ¢
+	// å½“å‰ä¿¡æ¯
 	currentTip = null,
 
-	// È·ÈÏºóÒª¼ÌĞøÖ´ĞĞµÄ·½·¨
+	// ç¡®è®¤åè¦ç»§ç»­æ‰§è¡Œçš„æ–¹æ³•
 	confirmFn = null,
 
 	/**
-	 * ÏÔÊ¾title
+	 * æ˜¾ç¤ºtitle
 	 */
 	showTip = function() {
 		var position = titleTip.data('position'),
@@ -43,10 +43,10 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÏÔÊ¾´íÎóĞÅÏ¢
+	 * æ˜¾ç¤ºé”™è¯¯ä¿¡æ¯
 	 */
 	exports.showErrorTip = function(text) {
-		if (currentTip != errorTip) { // Ïû³ıÒÑÓĞµÄÌáÊ¾ĞÅÏ¢
+		if (currentTip != errorTip) { // æ¶ˆé™¤å·²æœ‰çš„æç¤ºä¿¡æ¯
 			exports.close();
 			currentTip = errorTip;
 		}
@@ -57,10 +57,10 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÏÔÊ¾ÌáÊ¾ĞÅÏ¢
+	 * æ˜¾ç¤ºæç¤ºä¿¡æ¯
 	 */
 	exports.showInfoTip = function(text, fn) {
-		if (currentTip != errorTip) { // ÓĞ´íÎóĞÅÏ¢ÔòÎŞÊÓÌáÊ¾ĞÅÏ¢
+		if (currentTip != errorTip) { // æœ‰é”™è¯¯ä¿¡æ¯åˆ™æ— è§†æç¤ºä¿¡æ¯
 			currentTip = infoTip;
 			confirmFn = fn;
 			clearTimeout(infoTip.data('timeout'));
@@ -71,7 +71,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * °´Å¥ÎÄ×ÖÌáÊ¾
+	 * æŒ‰é’®æ–‡å­—æç¤º
 	 */
 	exports.showTip = function(evt) {
 		var target = $(evt.target);
@@ -88,7 +88,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * È·ÈÏÌáÊ¾
+	 * ç¡®è®¤æç¤º
 	 */
 	exports.confirm = function() {
 		confirmFn && confirmFn();
@@ -96,7 +96,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ¹Ø±ÕÌáÊ¾
+	 * å…³é—­æç¤º
 	 */
 	exports.close = function() {
 		if (currentTip) {

@@ -1,19 +1,19 @@
 /**
- * Êı¾İÄ£ĞÍ
+ * æ•°æ®æ¨¡å‹
  */
 define(function(require, exports) {
 
-	// ºóÌ¨Ò³Êı¾İÄ£ĞÍ
+	// åå°é¡µæ•°æ®æ¨¡å‹
 	var model = chrome.extension.getBackgroundPage().model,
 	
-	// ¹¤¾ß¼¯
+	// å·¥å…·é›†
 	util = require('../util/util.js'),
 
-	// ½áµã
+	// ç»“ç‚¹
 	Entry = require('./entry.js'),
 
 	/**
-	 * Ê¹ÓÃ´úÀíÈÃ±ä¸üÁ¢¼´ÉúĞ§
+	 * ä½¿ç”¨ä»£ç†è®©å˜æ›´ç«‹å³ç”Ÿæ•ˆ
 	 */
 	doProxy = function(array) {
 		var script = '', i;
@@ -35,7 +35,7 @@ define(function(require, exports) {
 
 	manifest = {};
 
-	// ¼ÓÔØmanifest.jsonÎÄ¼ş
+	// åŠ è½½manifest.jsonæ–‡ä»¶
 	$.ajax({
 		async: false,
 		dataType: 'json',
@@ -46,22 +46,22 @@ define(function(require, exports) {
 	});
 
 	/**
-	 * ´æ´¢Êı¾İ
+	 * å­˜å‚¨æ•°æ®
 	 */
 	exports.put = model.put;
 
 	/**
-	 * »ñÈ¡Êı¾İ
+	 * è·å–æ•°æ®
 	 */
 	exports.get = model.get;
 
 	/**
-	 * É¾³ıÊı¾İ
+	 * åˆ é™¤æ•°æ®
 	 */
 	exports.remove = model.remove;
 
 	/**
-	 * Ìí¼Ó×é
+	 * æ·»åŠ ç»„
 	 */
 	exports.addGroup = function(groupData) {
 		var data = model.get('data') || exports.loadData(),
@@ -77,7 +77,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ´ÓhostsÎÄ¼ş¼ÓÔØÊı¾İ
+	 * ä»hostsæ–‡ä»¶åŠ è½½æ•°æ®
 	 */
 	exports.loadData = function() {
 		var file = exports.getHostsPath(),
@@ -85,7 +85,7 @@ define(function(require, exports) {
 		data = {},
 		i, c, d, entry, group;
 		if (content) {
-			for (i = 0; i < content.length; i++) { // É¨Ãè·Çutf8×Ö·û
+			for (i = 0; i < content.length; i++) { // æ‰«æéutf8å­—ç¬¦
 				c = content.charAt(i);
 				if (c == '\ufffc' || c == '\ufffd') {
 					data.error = 'unknownChar';
@@ -95,12 +95,12 @@ define(function(require, exports) {
 			content = content.split(/\r?\n/);
 			for (i = 0; i < content.length; i++) {
 				entry = new Entry();
-				if (entry.analysis(content[i])) { // ÊÇºÏ·¨¼ÇÂ¼
+				if (entry.analysis(content[i])) { // æ˜¯åˆæ³•è®°å½•
 					c = group || util.i18n('defaultGroup');
 					d = c.charAt(0) == '@' ? c.substring(1) : c;
 					data[d] = data[d] || new Entry(c);
 					data[d].link(entry);
-				} else { // ÊÇ×¢ÊÍ»ò¿ÕĞĞ
+				} else { // æ˜¯æ³¨é‡Šæˆ–ç©ºè¡Œ
 					group = entry.line;
 				}
 			}
@@ -115,7 +115,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±£´æÊı¾İµ½Ö¸¶¨ÎÄ¼ş
+	 * ä¿å­˜æ•°æ®åˆ°æŒ‡å®šæ–‡ä»¶
 	 */
 	exports.saveData = function(file) {
 		var data = model.get('data'),
@@ -142,21 +142,21 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÉèÖÃhostsÎÄ¼şÂ·¾¶
+	 * è®¾ç½®hostsæ–‡ä»¶è·¯å¾„
 	 */
 	exports.setHostsPath = function(path) {
 		model.put('hostsPath', path);
 	};
 
 	/**
-	 * »ñÈ¡hostsÎÄ¼şÂ·¾¶(ÓÅÏÈÊÖ¶¯ÉèÖÃµÄÖµ,Æä´ÎÄ¬ÈÏÖµ)
+	 * è·å–hostsæ–‡ä»¶è·¯å¾„(ä¼˜å…ˆæ‰‹åŠ¨è®¾ç½®çš„å€¼,å…¶æ¬¡é»˜è®¤å€¼)
 	 */
 	exports.getHostsPath = function() {
 		return model.get('hostsPath') || model.getHostsPath();
 	};
 
 	/**
-	 * »ñÈ¡°æ±¾ºÅ
+	 * è·å–ç‰ˆæœ¬å·
 	 */
 	exports.getVersion = function() {
 		return manifest.version;

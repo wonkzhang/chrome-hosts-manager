@@ -1,37 +1,37 @@
 /**
- * ÊÓÍ¼Âß¼­
+ * è§†å›¾é€»è¾‘
  */
 define(function(require, exports) {
 
-	// ÒµÎñÂß¼­
+	// ä¸šåŠ¡é€»è¾‘
 	var biz = require('./biz.js'),
 	
-	// ¹¤¾ß¼¯
+	// å·¥å…·é›†
 	util = require('../util/util.js'),
 	
-	// µ¯³öÏûÏ¢
+	// å¼¹å‡ºæ¶ˆæ¯
 	tip = require('../util/tip.js'),
 
-	// ±à¼­²ã
+	// ç¼–è¾‘å±‚
 	editor = require('../util/editor.js'),
 
-	// äÖÈ¾Æ÷
+	// æ¸²æŸ“å™¨
 	Render = require('../model/render.js'),
 
-	// ×é½áµãäÖÈ¾Æ÷
+	// ç»„ç»“ç‚¹æ¸²æŸ“å™¨
 	groupRender = new Render('groupTemp'),
 
-	// ĞĞ½áµãäÖÈ¾Æ÷
+	// è¡Œç»“ç‚¹æ¸²æŸ“å™¨
 	lineRender = new Render('lineTemp'),
 
-	// Í·äÖÈ¾Æ÷
+	// å¤´æ¸²æŸ“å™¨
 	headRender = new Render('headTemp'),
 
-	// ¹ıÂË·Çµ±Ç°URLµÄ±ê¼Ç
+	// è¿‡æ»¤éå½“å‰URLçš„æ ‡è®°
 	isCurrent = false,
 
 	/**
-	 * ±£´æÎÄ¼ş
+	 * ä¿å­˜æ–‡ä»¶
 	 */
 	saveData = function(file) {
 		try {
@@ -47,7 +47,7 @@ define(function(require, exports) {
 	},
 
 	/**
-	 * ÅúÁ¿ÆôÓÃ/½ûÓÃ
+	 * æ‰¹é‡å¯ç”¨/ç¦ç”¨
 	 */
 	batchCheck = function(enables, disables) {
 		if (saveData()) {
@@ -57,7 +57,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÇĞ»»ÆôÓÃ/½ûÓÃ°´Å¥
+	 * åˆ‡æ¢å¯ç”¨/ç¦ç”¨æŒ‰é’®
 	 */
 	exports.check = function(target) {
 		var node = target.closest('.node');
@@ -73,7 +73,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Ìí¼Ó×é
+	 * æ·»åŠ ç»„
 	 */
 	exports.addGroup = function(target, line) {
 		var fields = biz.editFields({
@@ -81,16 +81,16 @@ define(function(require, exports) {
 			hostname: '',
 			comment: ''
 		});
-		if (!line) { // ĞÂ×é
+		if (!line) { // æ–°ç»„
 			fields = biz.editFields({
 				line: line || util.i18n('newGroup')
 			}).concat(fields);
 		}
 		editor.show(target.data('title'), fields, function(err, data) {
-			if (err) { // ÊäÈëĞ£Ñé
+			if (err) { // è¾“å…¥æ ¡éªŒ
 				tip.showErrorTip(err);
 			} else {
-				if (line) { // ĞÂÏîÒÑÓĞËùÊô×é
+				if (line) { // æ–°é¡¹å·²æœ‰æ‰€å±ç»„
 					data.line = line;
 				}
 				biz.addGroup(data);
@@ -104,7 +104,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Ìí¼ÓĞĞ
+	 * æ·»åŠ è¡Œ
 	 */
 	exports.addLine = function(target) {
 		var node = target.closest('.node'),
@@ -113,18 +113,18 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±à¼­°´Å¥
+	 * ç¼–è¾‘æŒ‰é’®
 	 */
 	exports.edit = function(target) {
 		var data = target.closest('.node').data('target'),
 		fields = biz.editFields(data);
 		editor.show(target.data('title'), fields, function(err, nData) {
-			if (err) { // ÊäÈëĞ£Ñé
+			if (err) { // è¾“å…¥æ ¡éªŒ
 				tip.showErrorTip(err);
 			} else {
 				var render = data.addr ? lineRender : groupRender,
 				node = null;
-				for (var i in nData) { // ĞÂÖµ¸²¸Ç
+				for (var i in nData) { // æ–°å€¼è¦†ç›–
 					data[i] = nData[i];
 				}
 				node = $(render.render(data));
@@ -136,7 +136,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * É¾³ı°´Å¥
+	 * åˆ é™¤æŒ‰é’®
 	 */
 	exports.remove = function(target) {
 		tip.showInfoTip(target.data('title') + '?', function() {
@@ -151,7 +151,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Õ¹¿ª/ÊÕËõ°´Å¥
+	 * å±•å¼€/æ”¶ç¼©æŒ‰é’®
 	 */
 	exports.expand = function(target) {
 		if (!target.hasClass('lock')) {
@@ -160,11 +160,11 @@ define(function(require, exports) {
 			collapse = target.hasClass('collapse');
 			group.data('target').hide = collapse;
 			if (saveData()) {
-				if (collapse) { // ÊÕËõÒÑ¾­Õ¹¿ªµÄ
+				if (collapse) { // æ”¶ç¼©å·²ç»å±•å¼€çš„
 					group.next().slideUp(function() {
 						target.removeClass('collapse lock').addClass('expand');
 					});
-				} else { // Õ¹¿ªÒÑ¾­ÊÕËõµÄ
+				} else { // å±•å¼€å·²ç»æ”¶ç¼©çš„
 					group.next().slideDown(function() {
 						target.removeClass('expand lock').addClass('collapse');
 					});
@@ -174,7 +174,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Á´½Ó°´Å¥
+	 * é“¾æ¥æŒ‰é’®
 	 */
 	exports.link = function() {
 		var val = $('#hostsPath').val();
@@ -192,7 +192,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * äÖÈ¾Í·
+	 * æ¸²æŸ“å¤´
 	 */
 	exports.renderHead = function() {
 		$('#content').before(headRender.render({
@@ -202,7 +202,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Ë¢ĞÂÊı¾İ
+	 * åˆ·æ–°æ•°æ®
 	 */
 	exports.refresh = function(refresh) {
 		var val = $('#hostsPath').val();
@@ -243,7 +243,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±¸·İÊı¾İ
+	 * å¤‡ä»½æ•°æ®
 	 */
 	exports.backup = function() {
 		editor.show(util.i18n('backupPath'), [ {
@@ -267,7 +267,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ¹ö¶¯ÒõÓ°Ğ§¹û
+	 * æ»šåŠ¨é˜´å½±æ•ˆæœ
 	 */
 	exports.scroll = function(target) {
 		clearTimeout(target.data('timeout'));
@@ -283,7 +283,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÏÔÊ¾µ±Ç°Â·¾¶µÄ°ó¶¨
+	 * æ˜¾ç¤ºå½“å‰è·¯å¾„çš„ç»‘å®š
 	 */
 	exports.current = function() {
 		if (isCurrent) {
@@ -316,7 +316,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±à¼­È¡Ïû
+	 * ç¼–è¾‘å–æ¶ˆ
 	 */
 	exports.olCancel = function() {
 		editor.hide();
@@ -324,7 +324,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÏÔÊ¾³õÊ¼»¯µÄ½¨ÒéĞÅÏ¢
+	 * æ˜¾ç¤ºåˆå§‹åŒ–çš„å»ºè®®ä¿¡æ¯
 	 */
 	exports.initInfoTip = function() {
 		if (!chrome.benchmarking) {
@@ -333,7 +333,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÏÔÊ¾µ±Ç°tabµÄIP
+	 * æ˜¾ç¤ºå½“å‰tabçš„IP
 	 */
 	exports.showCurrentIP = function() {
 		util.getCurrentTab(function(tab) {
@@ -343,22 +343,22 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±à¼­±£´æ
+	 * ç¼–è¾‘ä¿å­˜
 	 */
 	exports.olSave = editor.save;
 
 	/**
-	 * °´Å¥ÎÄ×ÖÌáÊ¾
+	 * æŒ‰é’®æ–‡å­—æç¤º
 	 */
 	exports.showTip = tip.showTip;
 
 	/**
-	 * È·ÈÏÌáÊ¾
+	 * ç¡®è®¤æç¤º
 	 */
 	exports.confirm = tip.confirm;
 
 	/**
-	 * ¹Ø±ÕÌáÊ¾
+	 * å…³é—­æç¤º
 	 */
 	exports.close = tip.close;
 

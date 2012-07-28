@@ -1,34 +1,34 @@
 /**
- * ±à¼­²ã
+ * ç¼–è¾‘å±‚
  */
 define(function(require, exports) {
 
-	// äÖÈ¾Æ÷
+	// æ¸²æŸ“å™¨
 	var Render = require('../model/render.js'),
 
-	// ¸¡²ãäÖÈ¾Æ÷
+	// æµ®å±‚æ¸²æŸ“å™¨
 	olRender = new Render('olTemp'),
 	
-	// ±íµ¥ÓòäÖÈ¾Æ÷
+	// è¡¨å•åŸŸæ¸²æŸ“å™¨
 	fieldRender = new Render('fieldTemp'),
 
-	// ¹¤¾ß¼¯
+	// å·¥å…·é›†
 	util = require('../util/util.js'),
 
-	// ÕÚÕÖ
+	// é®ç½©
 	mask = $('#mask').hide(),
 
-	// ¸¡²ã
+	// æµ®å±‚
 	overlay = $('#overlay'),
 
-	// µ±Ç°±à¼­ÖĞµÄ±íµ¥Ïî
+	// å½“å‰ç¼–è¾‘ä¸­çš„è¡¨å•é¡¹
 	olFields = null;
 
 	/**
-	 * ÏÔÊ¾±à¼­²ã
-	 * @param title ±êÌâ
-	 * @param fields Òª±à¼­µÄ±íµ¥Ïî
-	 * @param save ±£´æ°´Å¥µÄ»Øµ÷·½·¨
+	 * æ˜¾ç¤ºç¼–è¾‘å±‚
+	 * @param title æ ‡é¢˜
+	 * @param fields è¦ç¼–è¾‘çš„è¡¨å•é¡¹
+	 * @param save ä¿å­˜æŒ‰é’®çš„å›è°ƒæ–¹æ³•
 	 */
 	exports.show = function(title, fields, save) {
 		var html = '';
@@ -54,7 +54,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ±£´æÊı¾İ
+	 * ä¿å­˜æ•°æ®
 	 */
 	exports.save = function() {
 		if (olSave) {
@@ -63,14 +63,14 @@ define(function(require, exports) {
 			overlay.find('input').each(function() {
 				var value = $.trim(this.value),
 				check = olFields[this.name].check;
-				if (check) { // ĞèÒªĞ£Ñé
+				if (check) { // éœ€è¦æ ¡éªŒ
 					if (typeof check == 'string' ? util[check](value) : check.test(value)) {
 						data[this.name] = value;
 					} else {
 						fieldError = olRender.render(null, olFields[this.name].label);
 						return false;
 					}
-				} else { // ²»ĞèÒªĞ£Ñé
+				} else { // ä¸éœ€è¦æ ¡éªŒ
 					data[this.name] = value;
 				}
 			});
@@ -82,7 +82,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * Òş²Ø±à¼­²ã
+	 * éšè—ç¼–è¾‘å±‚
 	 */
 	exports.hide = function() {
 		mask.fadeOut();

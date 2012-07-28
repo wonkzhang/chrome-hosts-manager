@@ -1,14 +1,14 @@
 /**
- * äÖÈ¾Æ÷
+ * æ¸²æŸ“å™¨
  */
 define(function(require, exports, module) {
 
-	// ¹¤¾ßÀà
+	// å·¥å…·ç±»
 	var util = require('../util/util.js'),
 
 	/**
-	 * ¹¹Ôì·½·¨
-	 * @param template Ä£°åid
+	 * æ„é€ æ–¹æ³•
+	 * @param template æ¨¡æ¿id
 	 */
 	Render = function(template) {
 		if (template) {
@@ -19,11 +19,11 @@ define(function(require, exports, module) {
 	Render.prototype = {
 
 		/**
-		 * ½«¶ÔÏóäÖÈ¾µ½Ä£°å
-		 * ÒÔÏÂ¼¸ÖÖĞÎÊ½½«±»±äÁ¿Ìæ»»:
-		 * {{:text}} ´Ó¹ú¼Ê»¯ÎÄ¼şÖĞ»ñÈ¡text
-		 * {{a.b}} Ïàµ±ÓÚobj.a.b
-		 * {{a.b?1:2}} Ïàµ±ÓÚobj.a.b?1:2
+		 * å°†å¯¹è±¡æ¸²æŸ“åˆ°æ¨¡æ¿
+		 * ä»¥ä¸‹å‡ ç§å½¢å¼å°†è¢«å˜é‡æ›¿æ¢:
+		 * {{:text}} ä»å›½é™…åŒ–æ–‡ä»¶ä¸­è·å–text
+		 * {{a.b}} ç›¸å½“äºobj.a.b
+		 * {{a.b?1:2}} ç›¸å½“äºobj.a.b?1:2
 		 */
 		render: function(obj, template) {
 			return (template || this.template).replace(/\{\{([:\w\.\?]+)\}\}/g, function(str, p1) {

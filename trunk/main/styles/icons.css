@@ -102,3 +102,9 @@
 #infoTip .confirm:hover {
 	background-position: -16px -240px;
 }
+.import {
+	background-position: 0 -256px;
+}
+.import:hover {
+	background-position: -16px -256px;
+}

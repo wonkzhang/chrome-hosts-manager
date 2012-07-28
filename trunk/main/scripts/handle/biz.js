@@ -1,13 +1,13 @@
 /**
- * ÒµÎñÂß¼­
+ * ä¸šåŠ¡é€»è¾‘
  */
 define(function(require, exports) {
 
-	// ºóÌ¨Ò³Êı¾İÄ£ĞÍ
+	// åå°é¡µæ•°æ®æ¨¡å‹
 	var model = require('../model/model.js'),
 
 	/**
-	 * ½ûÓÃµô¼¯ºÏÖĞµÄÓòÃû, ·µ»Ø½ûÓÃ½áµã¼¯ºÏ(Ö¸¶¨group»òentryµÄ³ıÍâ)
+	 * ç¦ç”¨æ‰é›†åˆä¸­çš„åŸŸå, è¿”å›ç¦ç”¨ç»“ç‚¹é›†åˆ(æŒ‡å®šgroupæˆ–entryçš„é™¤å¤–)
 	 */
 	disableAll = function(hostnames, group, entry) {
 		var data = exports.loadData(),
@@ -33,11 +33,11 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÇĞ»»×éÆôÓÃ×´Ì¬
+	 * åˆ‡æ¢ç»„å¯ç”¨çŠ¶æ€
 	 */
 	exports.checkGroup = function(node, callback) {
 		var entry = node.data('target');
-		if (entry.enable) { // ÆôÓÃµÄ×éÇĞ»»Îª½ûÓÃ
+		if (entry.enable) { // å¯ç”¨çš„ç»„åˆ‡æ¢ä¸ºç¦ç”¨
 			entry.traverse(function() {
 				if (this.enable) {
 					this.enable = false;
@@ -47,12 +47,12 @@ define(function(require, exports) {
 			entry.enable = false;
 			callback(null, node);
 			entry = node = null;
-		} else { // ½ûÓÃµÄ×éÇĞ»»ÎªÆôÓÃ
+		} else { // ç¦ç”¨çš„ç»„åˆ‡æ¢ä¸ºå¯ç”¨
 			var hostnames = {},
 			duplicate = false,
 			disables = null,
 			enables = entry.target;
-			entry.traverse(function() { // Ñ°ÕÒ×éÄÚÊÇ·ñÓĞÖØ¸´hostname
+			entry.traverse(function() { // å¯»æ‰¾ç»„å†…æ˜¯å¦æœ‰é‡å¤hostname
 				if (hostnames[this.hostname]) {
 					duplicate = true;
 					return false;
@@ -63,7 +63,7 @@ define(function(require, exports) {
 			if (duplicate) {
 				throw 1;
 			}
-			disables = disableAll(hostnames, entry); // ½ûÓÃÆäËû×éÄÚºÍ±¾×éÓĞÖØ¸´µÄhostname
+			disables = disableAll(hostnames, entry); // ç¦ç”¨å…¶ä»–ç»„å†…å’Œæœ¬ç»„æœ‰é‡å¤çš„hostname
 			entry.traverse(function() {
 				if (!this.enable) {
 					this.enable = true;
@@ -77,7 +77,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÇĞ»»ĞĞÆôÓÃ×´Ì¬
+	 * åˆ‡æ¢è¡Œå¯ç”¨çŠ¶æ€
 	 */
 	exports.checkLine = function(node, callback) {
 		var entry = node.data('target'),
@@ -97,7 +97,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ¼ÓÔØÊı¾İ
+	 * åŠ è½½æ•°æ®
 	 */
 	exports.loadData = function(noCache) {
 		if (noCache || !model.get('data')) {
@@ -108,11 +108,11 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * »ñÈ¡ĞèÒª±à¼­µÄ±íµ¥Ïî
+	 * è·å–éœ€è¦ç¼–è¾‘çš„è¡¨å•é¡¹
 	 */
 	exports.editFields = function(data) {
 		var fields = [];
-		if (data.addr) { // ĞĞ
+		if (data.addr) { // è¡Œ
 			fields.push({
 				label: '{{:olAddr}}',
 				name: 'addr',
@@ -131,7 +131,7 @@ define(function(require, exports) {
 				value: data.comment,
 				check: /^[^#]*$/
 			});
-		} else { // ×é
+		} else { // ç»„
 			fields.push({
 				label: '{{:olGroup}}',
 				name: 'line',
@@ -143,34 +143,34 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * »ñÈ¡µ±Ç°tabµÄIP
+	 * è·å–å½“å‰tabçš„IP
 	 */
 	exports.getIP = function(tabId) {
 		return model.get(tabId);
 	};
 
 	/**
-	 * Ìí¼Ó×é
+	 * æ·»åŠ ç»„
 	 */
 	exports.addGroup = model.addGroup;
 
 	/**
-	 * ±£´æÊı¾İ
+	 * ä¿å­˜æ•°æ®
 	 */
 	exports.saveData = model.saveData;
 
 	/**
-	 * »ñÈ¡°æ±¾ºÅ
+	 * è·å–ç‰ˆæœ¬å·
 	 */
 	exports.getVersion = model.getVersion;
 
 	/**
-	 * »ñÈ¡hostsÎÄ¼şÂ·¾¶
+	 * è·å–hostsæ–‡ä»¶è·¯å¾„
 	 */
 	exports.getHostsPath = model.getHostsPath;
 
 	/**
-	 * ÉèÖÃhostsÎÄ¼şÂ·¾¶
+	 * è®¾ç½®hostsæ–‡ä»¶è·¯å¾„
 	 */
 	exports.setHostsPath = model.setHostsPath;
 

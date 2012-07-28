@@ -12,12 +12,14 @@
 }
 #content .group .name {
 	float: left;
-	width: 310px;
+	width: 290px;
+	height: 16px;
+	overflow: hidden;
 	font-weight: bold;
 }
 #content .group .ctrl {
 	float: right;
-	width: 80px;
+	width: 100px;
 }
 #content .group .ctrl .collapse,
 #content .group .ctrl .expand {

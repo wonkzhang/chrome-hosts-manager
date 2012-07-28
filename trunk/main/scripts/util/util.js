@@ -1,12 +1,12 @@
 /**
- * ¹¤¾ß¼¯
+ * å·¥å…·é›†
  */
 define(function(require, exports) {
 
-	// ºóÌ¨Ò³¹¤¾ß¼¯
+	// åå°é¡µå·¥å…·é›†
 	var util = chrome.extension.getBackgroundPage().util,
 
-	// ÊÇ·ñÊÇºÏ·¨µÄIPv4µØÖ·
+	// æ˜¯å¦æ˜¯åˆæ³•çš„IPv4åœ°å€
 	isV4 = function(ip) {
 		if (/^\d{1,3}(\.\d{1,3}){3}$/.test(ip)) {
 			ip = ip.split('.');
@@ -22,7 +22,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÊÇ·ñÊÇºÏ·¨µÄIPµØÖ·
+	 * æ˜¯å¦æ˜¯åˆæ³•çš„IPåœ°å€
 	 */
 	exports.isValidIP = function(ip) {
 		var i, parts;
@@ -57,7 +57,7 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ´ÓURLÀïÕÒ³ö¿ÉÄÜµÄÓòÃû
+	 * ä»URLé‡Œæ‰¾å‡ºå¯èƒ½çš„åŸŸå
 	 */
 	exports.findHostname = function(url) {
 		if (url) {
@@ -72,8 +72,8 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * »ñÈ¡µ±Ç°tab
-	 * @param callback ²ÎÊıÎªµ±Ç°tab
+	 * è·å–å½“å‰tab
+	 * @param callback å‚æ•°ä¸ºå½“å‰tab
 	 */
 	exports.getCurrentTab = function(callback) {
 		chrome.tabs.query({
@@ -87,17 +87,17 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * ÎÄ¼şÊÇ·ñ´æÔÚ
+	 * æ–‡ä»¶æ˜¯å¦å­˜åœ¨
 	 */
 	exports.fileExists = util.fileExists;
 
 	/**
-	 * Â·¾¶ÊÇ·ñÊÇÄ¿Â¼
+	 * è·¯å¾„æ˜¯å¦æ˜¯ç›®å½•
 	 */
 	exports.isDirectory = util.isDirectory;
 
 	/**
-	 * »ñÈ¡¹ú¼Ê»¯ÎÄ°¸
+	 * è·å–å›½é™…åŒ–æ–‡æ¡ˆ
 	 */
 	exports.i18n = chrome.i18n.getMessage;
 

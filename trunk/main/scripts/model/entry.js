@@ -1,26 +1,26 @@
 /**
- * ½áµã
+ * ç»“ç‚¹
  */
 define(function(require, exports, module) {
 
-	// ×¢ÊÍµÄÕıÔò
+	// æ³¨é‡Šçš„æ­£åˆ™
 	var regQute = /^#+\s*/,
 
-	// ¹¤¾ßÀà
+	// å·¥å…·ç±»
 	util = require('../util/util.js'),
 
 	/**
-	 * ¹¹Ôì·½·¨
+	 * æ„é€ æ–¹æ³•
 	 */
 	Entry = function(line) {
 		this.addr = ''; // IP
-		this.comment = ''; // ×¢ÊÍ
-		this.enable = false; // ÊÇ·ñÆôÓÃ
-		this.hostname = ''; // ÓòÃû
-		this.line = line; // hostsÎÄ¼şÖĞ¶ÔÓ¦µÄĞĞ
-		this.next = this; // ÏÂÒ»Ìõ¼ÇÂ¼
-		this.target = null; // ¶ÔÓ¦µÄDOM
-		this.hide = false; // ÊÇ·ñÒş²Ø(Ö»¶Ô×éÓĞĞ§)
+		this.comment = ''; // æ³¨é‡Š
+		this.enable = false; // æ˜¯å¦å¯ç”¨
+		this.hostname = ''; // åŸŸå
+		this.line = line; // hostsæ–‡ä»¶ä¸­å¯¹åº”çš„è¡Œ
+		this.next = this; // ä¸‹ä¸€æ¡è®°å½•
+		this.target = null; // å¯¹åº”çš„DOM
+		this.hide = false; // æ˜¯å¦éšè—(åªå¯¹ç»„æœ‰æ•ˆ)
 		if (line && line.charAt(0) == '@') {
 			this.hide = true;
 			this.line = line.substring(1);
@@ -30,7 +30,7 @@ define(function(require, exports, module) {
 	Entry.prototype = {
 
 		/**
-		 * ´Óµ±Ç°½áµãµÄÏÂÒ»¸ö¿ªÊ¼±éÀú, ·µ»Ø±éÀúµ½µÄ½áµã¸öÊı
+		 * ä»å½“å‰ç»“ç‚¹çš„ä¸‹ä¸€ä¸ªå¼€å§‹éå†, è¿”å›éå†åˆ°çš„ç»“ç‚¹ä¸ªæ•°
 		 */
 		traverse: function(callback) {
 			var c = 0, p = this.next, q;
@@ -46,7 +46,7 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ¶¨Î»µ½×é½áµã
+		 * å®šä½åˆ°ç»„ç»“ç‚¹
 		 */
 		findGroup: function() {
 			var group = null;
@@ -60,7 +60,7 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ÉèÖÃÄ¿±ê½áµã
+		 * è®¾ç½®ç›®æ ‡ç»“ç‚¹
 		 */
 		setTarget: function(target) {
 			if (target && (target instanceof $)) {
@@ -70,7 +70,7 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ¼ì²éÊÇ·ñÆôÓÃ
+		 * æ£€æŸ¥æ˜¯å¦å¯ç”¨
 		 */
 		checkEnable: function() {
 			var that = this;
@@ -87,7 +87,7 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * Á´½Ó
+		 * é“¾æ¥
 		 */
 		link: function(entry) {
 			var p = entry;
@@ -99,18 +99,18 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ¶Ï¿ªÁ´½Ó
+		 * æ–­å¼€é“¾æ¥
 		 */
 		delink: function() {
 			var p;
-			if (this.addr) { // ĞĞ
+			if (this.addr) { // è¡Œ
 				this.traverse(function() {
 					p = this;
 				});
-				if (p) { // Ç°Ò»¸ö½áµã
+				if (p) { // å‰ä¸€ä¸ªç»“ç‚¹
 					p.next = this.next;
 				}
-			} else { // ×é
+			} else { // ç»„
 				this.traverse(function() {
 					this.next = null;
 					this.target = null;
@@ -121,26 +121,26 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ½âÎö
+		 * è§£æ
 		 */
 		analysis: function(line) {
 			var regQute = /^#+/;
 			line = $.trim(line);
 			if (/^#*\s*[0-9A-Za-z:\.]+\s+[^#]+/.test(line)) {
-				this.enable = !regQute.test(line); // ÊÇ·ñÆôÓÃ
+				this.enable = !regQute.test(line); // æ˜¯å¦å¯ç”¨
 				if (!this.enable) {
 					line = line.replace(regQute, '');
 				}
 				var index = line.indexOf('#');
 				if (index != -1) {
-					this.comment = $.trim(line.substring(index).replace(regQute, '')); // ×¢ÊÍ
+					this.comment = $.trim(line.substring(index).replace(regQute, '')); // æ³¨é‡Š
 					line = $.trim(line.substring(0, index));
 				}
 				line = line.split(/\s+/);
-				if (line.length > 1 && util.isValidIP(line[0])) { // ÊÇºÏ·¨µÄIPµØÖ·
+				if (line.length > 1 && util.isValidIP(line[0])) { // æ˜¯åˆæ³•çš„IPåœ°å€
 					this.addr = line[0];
 					this.hostname = line[1];
-					for (var i = 2; i < line.length; i++) { // Ò»¸öIP¶ÔÓ¦¶à¸öÓòÃû
+					for (var i = 2; i < line.length; i++) { // ä¸€ä¸ªIPå¯¹åº”å¤šä¸ªåŸŸå
 						var entry = new Entry();
 						entry.addr = this.addr;
 						entry.comment = this.comment;
@@ -159,14 +159,14 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * »¹Ô­ÎªÎÄ×Ö
+		 * è¿˜åŸä¸ºæ–‡å­—
 		 */
 		toString: function() {
 			var text = '';
-			if (this.addr) { // ĞĞ
+			if (this.addr) { // è¡Œ
 				text += (this.enable ? '' : '#') + this.addr + '\t' + this.hostname;
 				text += (this.comment ? '\t# ' + this.comment : '') + '\n';
-			} else { // ×é(Êä³ö×éÄÚËùÓĞĞĞ)
+			} else { // ç»„(è¾“å‡ºç»„å†…æ‰€æœ‰è¡Œ)
 				text += '\n# ' + (this.hide ? '@' : '') + this.line + '\n';
 				this.traverse(function() {
 					text += this.toString();
@@ -176,7 +176,7 @@ define(function(require, exports, module) {
 		},
 
 		/**
-		 * ½«ÆôÓÃÏîÍÆµ½Êı×éÖĞ
+		 * å°†å¯ç”¨é¡¹æ¨åˆ°æ•°ç»„ä¸­
 		 * @param array
 		 */
 		pushEnables: function(array) {

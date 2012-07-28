@@ -1,0 +1,20 @@
+#chrome-hosts-manager-ipaddr {
+	position: fixed;
+	bottom: 15px;
+	left: 5px;
+	z-index: 2147483647 !important;
+	margin: 0;
+	padding: 0 .5em;
+	border-radius: 6px;
+	background: rgba(0, 0, 0, .35);
+	-webkit-transition: background 1s;
+	cursor: pointer;
+	line-height: 1.3em;
+	font-family: tahoma,arial;
+	font-size: 24px;
+	font-weight: bold;
+	color: #fff;
+}
+#chrome-hosts-manager-ipaddr:hover {
+	background: rgba(0, 0, 0, .7);
+}

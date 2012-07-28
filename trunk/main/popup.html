@@ -2,8 +2,11 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<script src="./assets/scripts/lib/jquery.js"></script>
-<script src="./assets/scripts/lib/sea.js"></script>
+<link rel="stylesheet" href="./styles/common.css"/>
+<link rel="stylesheet" href="./styles/icons.css"/>
+<link rel="stylesheet" href="./styles/popup.css"/>
+<script src="./scripts/lib/jquery.js"></script>
+<script src="./scripts/lib/sea.js"></script>
 <script type="text/template" id="headTemp">
 <div class="version selectable"><b>{{:appName}}</b> v{{version}}</div>
 <div class="panel">
@@ -11,6 +14,7 @@
 	<input id="hostsPath" class="hosts-editor" value="{{hostsPath}}"/>
 	<span class="icon fade link" data-title="{{:link}}" data-handle="link"></span>
 	<span class="icon fade refresh" data-title="{{:refresh}}" data-handle="refresh"></span>
+	<span class="icon fade import" data-title="{{:import}}" data-handle="imports"></span>
 	<span class="icon fade save" data-title="{{:backup}}" data-handle="backup"></span>
 	<span class="icon fade add" data-title="{{:addGroup}}" data-handle="addGroup"></span>
 	<span class="icon fade show" data-title="{{:current}}" data-handle="current"></span>
@@ -25,6 +29,7 @@
 	<div class="ctrl">
 		<span class="icon fade add" data-title="{{:addLine}}" data-handle="addLine"></span>
 		<span class="icon fade edit" data-title="{{:editGroup}}" data-handle="edit"></span>
+		<span class="icon fade import" data-title="{{:importGroup}}" data-handle="imports"></span>
 		<span class="icon fade remove" data-title="{{:removeGroup}}" data-handle="remove"></span>
 		<span class="icon {{hide?expand:collapse}}" data-handle="expand"></span>
 	</div>
@@ -82,6 +87,6 @@
 </div>
 <div id="content"></div>
 <div id="currentIP"></div>
-<script>seajs.use('./assets/scripts/init.js');</script>
+<script>seajs.use('./scripts/init.js');</script>
 </body>
 </html>
