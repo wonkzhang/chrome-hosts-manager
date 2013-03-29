@@ -13,11 +13,6 @@ define(function(require, exports) {
 	// 绑定事件
 	require('./bind.js');
 
-	// 加载样式
-	require('../styles/common.css');
-	require('../styles/icons.css');
-	require('../styles/popup.css');
-	
 	// 刷新数据
 	view.refresh(false);
 

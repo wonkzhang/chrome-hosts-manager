@@ -28,8 +28,14 @@ define(function(require, exports) {
 	// 头渲染器
 	headRender = new Render('headTemp'),
 
-	// 过滤非当前URL的标记
-	isCurrent = false,
+	// 标记(setter/getter)
+	mark = function(key, value) {
+		if (typeof value == 'undefined') {
+			return biz.getData(key);
+		} else {
+			return biz.putData(key, value);
+		}
+	},
 
 	/**
 	 * 保存文件
@@ -48,28 +54,65 @@ define(function(require, exports) {
 	},
 
 	/**
+	 * 筛选当前标签页的绑定
+	 */
+	filterCurrentTab = function() {
+		util.getCurrentTab(function(tab) {
+			var hostname = util.findHostname(tab.url);
+			if (hostname) {
+				var data = biz.loadData(),
+				i, sum, toHide;
+				for (i in data) {
+					toHide = $();
+					sum = data[i].traverse(function() {
+						if (this.hostname != hostname) {
+							toHide = toHide.add(this.target);
+						}
+					});
+					if (sum == toHide.length) {
+						data[i].target.closest('.block').addClass('hidden');
+					} else {
+						toHide.addClass('hidden');
+					}
+				}
+				mark('currentTab', '1');
+				data = null;
+			}
+		});
+	},
+
+	/**
+	 * 筛选当前工程的组
+	 */
+	filterCurrentProject = function(project) {
+		var data = biz.loadData(), i;
+		for (var i in data) {
+			if (i.indexOf('==@') != -1
+					&& i.split('==@')[1].indexOf(project) != -1) {
+				data[i].target.closest('.block').removeClass('hidden');
+			} else {
+				data[i].target.closest('.block').addClass('hidden');
+			}
+		}
+		mark('currentProject', project);
+	},
+
+	/**
 	 * 组筛选初始化
 	 */
 	groupFilterInit = function(projs) {
-		var select, i;
+		var selected = mark('currentProject'),
+		select, i;
 		if (!$.isEmptyObject(projs)) {
 			select = $('select');
 			if (select.length == 0) {
 				select = $('<select>');
 				select.change(function() {
-					isCurrent = false;
+					mark('currentTab', '');
 					if (this.selectedIndex) {
-						var text = this.options[this.selectedIndex].text,
-						data = biz.loadData();
-						for (var i in data) {
-							if (i.indexOf('==@') != -1
-									&& i.split('==@')[1].indexOf(text) != -1) {
-								data[i].target.closest('.block').removeClass('hidden');
-							} else {
-								data[i].target.closest('.block').addClass('hidden');
-							}
-						}
+						filterCurrentProject(this.options[this.selectedIndex].text);
 					} else {
+						mark('currentProject', '');
 						$('#content .hidden').removeClass('hidden');
 					}
 				});
@@ -77,7 +120,11 @@ define(function(require, exports) {
 			}
 			select.html('<option>' + util.i18n('allProjects') + '</option>');
 			for (i in projs) {
-				select.append('<option>' + i + '</option>');
+				if (selected == i) {
+					select.append('<option selected="selected">' + i + '</option>');
+				} else {
+					select.append('<option>' + i + '</option>');
+				}
 			}
 		} else {
 			$('#groupFilter').html(util.i18n('groupFilter'));
@@ -276,6 +323,12 @@ define(function(require, exports) {
 				}
 				content.append(blocks);
 				groupFilterInit(projs);
+				if (mark('currentTab')) {
+					filterCurrentTab();
+				} else if (mark('currentProject')) {
+					filterCurrentProject(mark('currentProject'));
+				}
+				blocks.css('display', 'block');
 				if (refresh !== false) {
 					tip.showInfoTip(util.i18n('loadSuccess'));
 				}
@@ -329,32 +382,15 @@ define(function(require, exports) {
 	 * 显示当前路径的绑定
 	 */
 	exports.current = function() {
-		if (isCurrent) {
+		if (mark('currentTab')) {
 			$('#content .hidden').removeClass('hidden');
-			isCurrent = false;
+			mark('currentTab', '');
 		} else {
-			util.getCurrentTab(function(tab) {
-				var hostname = util.findHostname(tab.url);
-				if (hostname) {
-					var data = biz.loadData(),
-					i, sum, toHide;
-					for (i in data) {
-						toHide = $();
-						sum = data[i].traverse(function() {
-							if (this.hostname != hostname) {
-								toHide = toHide.add(this.target);
-							}
-						});
-						if (sum == toHide.length) {
-							data[i].target.closest('.block').addClass('hidden');
-						} else {
-							toHide.addClass('hidden');
-						}
-					}
-					isCurrent = true;
-					data = null;
-				}
+			mark('currentProject', '');
+			$('select').each(function(i, n) {
+				n.selectedIndex = 0;
 			});
+			filterCurrentTab();
 		}
 	};
 

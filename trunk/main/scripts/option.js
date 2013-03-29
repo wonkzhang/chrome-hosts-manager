@@ -16,10 +16,6 @@ define(function(require, exports) {
 	// 是否显示IP
 	showIP = null;
 
-	// 加载样式
-	require('../styles/widgets.css');
-	require('../styles/option.css');
-
 	// 初始化
 	$('body').append(optionRender.render({}));
 	showIP = $('#showIP').click(function() {

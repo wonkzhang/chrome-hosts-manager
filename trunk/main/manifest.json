@@ -3,7 +3,10 @@
 		"scripts": [ "scripts/background.js" ]
 	},
 	"browser_action":	{
-		"default_icon": "images/icon.128.png",
+		"default_icon": {
+			"19": "images/icon.19.png",
+			"38": "images/icon.38.png"
+		},
 		"default_popup": "popup.html"
 	},
 	"default_locale": "en",
@@ -17,7 +20,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_appName__",
 	"options_page": "option.html",
-	"permissions": [ "proxy", "tabs", "webRequest", "webRequestBlocking", "http://*/*", "https://*/*", "file://*/*" ],
+	"permissions": [ "proxy", "tabs", "webRequest", "webRequestBlocking", "http://*/*", "https://*/*" ],
 	"plugins": [ {
 		"path": "./plugins/npapi-file-io-32.dll"
 	}, {
@@ -25,5 +28,5 @@
 	}, {
 		"path": "./plugins/npapi-file-io-64.so"
 	} ],
-	"version": "0.2.0"
+	"version": "0.2.1"
 }
