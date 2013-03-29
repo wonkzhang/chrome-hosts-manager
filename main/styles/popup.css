@@ -1,3 +1,9 @@
+@import url("common.css");
+@import url("icons.css");
+
+#content .blocks {
+	display: none;
+}
 #content .block {
 	margin: .5em 0;
 }

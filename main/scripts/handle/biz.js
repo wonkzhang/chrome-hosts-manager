@@ -7,6 +7,9 @@ define(function(require, exports) {
 	// 后台页数据模型
 	var model = require('../model/model.js'),
 
+	// 工具集
+	util = require('../util/util.js'),
+
 	/**
 	 * 禁用掉集合中的域名, 返回禁用结点集合(指定group或entry的除外)
 	 */
@@ -137,7 +140,8 @@ define(function(require, exports) {
 				label: '{{:olGroup}}',
 				name: 'line',
 				value: data.line,
-				check: /^[^@][^#]*$/
+				check: /^[^@][^#]*$/,
+				placeholder: util.i18n('groupNameTpl')
 			});
 		}
 		return fields;
@@ -179,5 +183,15 @@ define(function(require, exports) {
 	 * 设置hosts文件路径
 	 */
 	exports.setHostsPath = model.setHostsPath;
+
+	/**
+	 * 存数据
+	 */
+	exports.putData = model.put;
+
+	/**
+	 * 取数据
+	 */
+	exports.getData = model.get;
 
 });

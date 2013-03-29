@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8"/>
-<link rel="stylesheet" href="./styles/styles.css"/>
+<link rel="stylesheet" href="./styles/popup.css"/>
 <script type="text/template" id="headTemp">
 <div class="version selectable"><b>{{:appName}}</b> v{{version}}</div>
 <div class="panel">
@@ -67,7 +67,7 @@
 		<label for="olEditor-{{name}}">{{label}}</label>
 	</td>
 	<td>
-		<input id="olEditor-{{name}}" name="{{name}}" value="{{value}}"/>
+		<input id="olEditor-{{name}}" name="{{name}}" value="{{value}}" placeholder="{{placeholder}}" title="{{placeholder}}"/>
 	</td>
 </tr>
 </script>

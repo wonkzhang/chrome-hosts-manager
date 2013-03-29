@@ -57,7 +57,8 @@ define(function(require, exports) {
 			html += render.render({
 				name: fields[i].name,
 				label: field.label,
-				value: fields[i].value || ''
+				value: fields[i].value || '',
+				placeholder: fields[i].placeholder || ''
 			});
 		}
 		overlay.html(olRender.render({
