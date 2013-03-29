@@ -29,6 +29,14 @@ define(function(require, exports) {
 	}
 	$('#' + model.get('method')).attr('checked', 'checked');
 	$(':radio').click(function() {
+		if (this.value != 'useProxy') { // 清理proxy
+			chrome.proxy.settings.set({
+				value: {
+					mode: 'system'
+				},
+				scope: 'regular'
+			}, $.noop);
+		}
 		model.put('method', this.value);
 	});
 
