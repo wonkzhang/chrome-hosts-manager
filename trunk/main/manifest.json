@@ -28,5 +28,5 @@
 	}, {
 		"path": "./plugins/npapi-file-io-64.so"
 	} ],
-	"version": "0.2.1"
+	"version": "0.2.2"
 }

@@ -24,7 +24,7 @@ define(function(require, exports) {
 		}
 		chrome.proxy.settings.set({
 			value: {
-				mode: "pac_script",
+				mode: 'pac_script',
 				pacScript: {
 					data: 'function FindProxyForURL(url,host){if(shExpMatch(url,"http:*")){if(isPlainHostName(host)){return "DIRECT";' +
 							script + '}else{return "DIRECT";}}else{return "DIRECT";}}'
