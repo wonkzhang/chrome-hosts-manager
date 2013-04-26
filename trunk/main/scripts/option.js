@@ -30,10 +30,7 @@ define(function(require, exports) {
 	$('#' + model.get('method')).attr('checked', 'checked');
 	$(':radio').click(function() {
 		if (this.value != 'useProxy') { // 清理proxy
-			chrome.proxy.settings.set({
-				value: {
-					mode: 'system'
-				},
+			chrome.proxy.settings.clear({
 				scope: 'regular'
 			}, $.noop);
 		}
