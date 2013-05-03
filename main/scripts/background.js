@@ -33,10 +33,24 @@
 		 * 获取hosts文件路径
 		 */
 		getHostsPath: function() {
-			if (embed.getPlatform() == 'windows') {
-				return embed.getSystemPath() + '\\drivers\\etc\\hosts';
-			} else {
-				return '/etc/hosts';
+			try {
+				if (embed.getPlatform() == 'windows') {
+					return embed.getSystemPath() + '\\drivers\\etc\\hosts';
+				} else {
+					return '/etc/hosts';
+				}
+			} catch (e) {
+				if (model.get('writeStorage') == '0') {
+					throw e;
+				}
+				var ua = navigator.userAgent,
+				path = '/etc/hosts';
+				if (/windows|win32/i.test(ua)) {
+					path = 'C:/WINDOWS/system32/drivers/etc/hosts';
+				} else if (/macintosh|mac_powerpc/i.test(ua)) {
+					path = '/private/etc/hosts';
+				}
+				return path;
 			}
 		},
 
@@ -46,7 +60,14 @@
 		 * @param content
 		 */
 		saveFile: function(file, content) {
-			embed.saveTextFile(file, content);
+			try {
+				embed.saveTextFile(file, content);
+			} catch (e) {
+				if (model.get('writeStorage') == '0') {
+					throw e;
+				}
+				localStorage.setItem("f:" + file, content);
+			}
 		},
 
 		/**
@@ -54,7 +75,28 @@
 		 * @param file
 		 */
 		readFile: function(file) {
-			return embed.getTextFile(file);
+			var content = localStorage.getItem("f:" + file);
+			if (content && model.get('writeStorage') == '1') {
+				return content;
+			} else {
+				return embed.getTextFile(file);
+			}
+		},
+
+		/**
+		 * 清本地文件存储
+		 */
+		clearStorage: function() {
+			var keys = [], i;
+			for (i = 0; i < localStorage.length; i++) {
+				var key = localStorage.key(i);
+				if (/^f:/.test(key)) {
+					keys.push(key);
+				}
+			}
+			for (i = 0; i < keys.length; i++) {
+				localStorage.removeItem(keys[i]);
+			}
 		}
 	};
 
@@ -85,7 +127,8 @@
 	};
 
 	// 设置状态的初始值
-	var method = model.get('method');
+	var method = model.get('method'),
+	openFlag = false;
 	if (chrome.benchmarking) {
 		model.put('benchmarking', '1');
 	} else {
@@ -97,6 +140,13 @@
 	model.put('method', method || 'useProxy');
 	if (!model.get('showIP')) {
 		model.put('showIP', '1');
+		openFlag = true;
+	}
+	if (!model.get('writeStorage')) {
+		model.put('writeStorage', '1');
+		openFlag = true;
+	}
+	if (openFlag) {
 		chrome.tabs.create({
 			url: 'option.html'
 		});

@@ -9,6 +9,8 @@
 <script type="text/template" id="optionTemp">
 <div class="pannel">
 	<b>{{:changeMethod}}</b>
+	<button type="button" class="floatright" id="clearProxy">{{:clearProxy}}</button>
+	<button type="button" class="floatright" id="clearStorage">{{:clearStorage}}</button>
 	<ul>
 		<li>
 			<input type="radio" name="method" id="useProxy" value="useProxy"/>
@@ -23,10 +25,13 @@
 			<label for="nothing">{{:nothing}}</label>
 		</li>
 	</ul>
+	<input type="checkbox" name="writeStorage" id="writeStorage"/>
+	<label for="writeStorage">{{:writeStorage}}</label>
+	<br/>
 	<input type="checkbox" name="showIP" id="showIP"/>
 	<label for="showIP">{{:showIP}}</label>
 	<br/>
-	<a href="{{:newVersionUrl}}" target="_blank">{{:newVersion}}</a>
+	<a href="{{:newVersionUrl}}" class="floatright" target="_blank">{{:newVersion}}</a>
 </div>
 </script>
 <script src="./scripts/lib/jquery.js"></script>

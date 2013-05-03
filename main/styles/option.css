@@ -27,3 +27,13 @@ li {
 	border-radius: 10px;
 	box-shadow: 2px 2px 40px 0 #000;
 }
+.pannel:after {
+	display: block;
+	content: ' ';
+	height: 0;
+	clear: both;
+	visibility: hidden;
+}
+.floatright {
+	float: right;
+}
