@@ -14,27 +14,38 @@ define(function(require, exports) {
 	optionRender = new Render('optionTemp'),
 
 	// 是否显示IP
-	showIP = null;
+	showIP = null,
+
+	// 是否允许本地存储
+	writeStorage = null;
 
 	// 初始化
 	$('body').append(optionRender.render({}));
 	showIP = $('#showIP').click(function() {
 		model.put('showIP', this.checked ? '1' : '0');
 	});
+	writeStorage = $('#writeStorage').click(function() {
+		model.put('writeStorage', this.checked ? '1' : '0');
+	});
 	if (model.get('showIP') == '1') {
 		showIP.attr('checked', 'checked');
+	}
+	if (model.get('writeStorage') == '1') {
+		writeStorage.attr('checked', 'checked');
 	}
 	if (model.get('benchmarking') == '0') {
 		$('#clearCache').attr('disabled', 'disabled').next().css('opacity', .75);
 	}
 	$('#' + model.get('method')).attr('checked', 'checked');
-	$(':radio').click(function() {
+	$(':radio,#clearProxy').click(function() {
 		if (this.value != 'useProxy') { // 清理proxy
 			chrome.proxy.settings.clear({
 				scope: 'regular'
 			}, $.noop);
 		}
-		model.put('method', this.value);
+		this.value && model.put('method', this.value);
 	});
-
+	$('#clearStorage').click(function() {
+		model.clearStorage();
+	});
 });
