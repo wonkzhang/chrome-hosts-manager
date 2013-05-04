@@ -110,7 +110,7 @@
 			try {
 				return embed.fileExists(file);
 			} catch (e) {
-				return false;
+				return true;
 			}
 		},
 
