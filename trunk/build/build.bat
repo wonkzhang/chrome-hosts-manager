@@ -14,6 +14,8 @@ call:doCompress "scripts\handle"
 call:doCompress "scripts\model"
 call:doCompress "scripts\util"
 call:doCompress "styles"
+md "%RELEASE%\scripts\lib"
+copy "%MAIN%\scripts\lib\*" "%RELEASE%\scripts\lib\"
 
 echo finish
 pause

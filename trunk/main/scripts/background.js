@@ -66,7 +66,7 @@
 				if (model.get('writeStorage') == '0') {
 					throw e;
 				}
-				localStorage.setItem("f:" + file, content);
+				localStorage.setItem('f:' + file, content);
 			}
 		},
 
@@ -75,11 +75,16 @@
 		 * @param file
 		 */
 		readFile: function(file) {
-			var content = localStorage.getItem("f:" + file);
-			if (content && model.get('writeStorage') == '1') {
-				return content;
-			} else {
+			if (model.get('writeStorage') == '1' && localStorage.getItem('f:' + file)) {
+				return localStorage.getItem('f:' + file);
+			}
+			try {
 				return embed.getTextFile(file);
+			} catch (e) {
+				if (model.get('writeStorage') == '0') {
+					throw e;
+				}
+				return localStorage.getItem('f:' + file) || '';
 			}
 		},
 
@@ -159,21 +164,21 @@
 			return;
 		}
 		chrome.tabs.executeScript(details.tabId, {
-			code: '(function(ip){' +
-					'if(ip){' +
-						'ip.innerHTML="' + details.ip + '";' +
-					'}else{' +
-						'ip=document.createElement("div");' +
-						'ip.innerHTML="' + details.ip + '";' +
-						'ip.id="chrome-hosts-manager-ipaddr";' +
-						'ip.title="' + chrome.i18n.getMessage('currentTabIP') +
-								chrome.i18n.getMessage('clickToHide') + '";' +
-						'document.body.appendChild(ip);' +
-						'ip.addEventListener("click",function(){' +
-							'ip.parentNode.removeChild(ip);' +
-						'});' +
-					'}' +
-				'})(document.getElementById("chrome-hosts-manager-ipaddr"))'
+			code: '(function(ip){\
+					if(ip){\
+						ip.innerHTML="' + details.ip + '";\
+					}else{\
+						ip=document.createElement("div");\
+						ip.innerHTML="' + details.ip + '";\
+						ip.id="chrome-hosts-manager-ipaddr";\
+						ip.title="' + chrome.i18n.getMessage('currentTabIP') +
+								chrome.i18n.getMessage('clickToHide') + '";\
+						document.body.appendChild(ip);\
+						ip.addEventListener("click",function(){\
+							\ip.parentNode.removeChild(ip);\
+						});\
+					}\
+				})(document.getElementById("chrome-hosts-manager-ipaddr"))'
 		});
 		chrome.tabs.insertCSS(details.tabId, {
 			file: '/styles/inject.css'

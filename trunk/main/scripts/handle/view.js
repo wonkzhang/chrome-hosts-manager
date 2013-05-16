@@ -341,7 +341,18 @@ define(function(require, exports) {
 	/**
 	 * 备份数据
 	 */
-	exports.backup = function() {
+	exports.backup = function(target) {
+		if (biz.canWrite()) {
+			editor.show(util.i18n('copyMe'), [{
+				label: '&nbsp;',
+				name: 'copyMe',
+				type: 'textarea',
+				value: biz.loadContent()
+			}], function() {
+				editor.hide();
+			});
+			return;
+		}
 		editor.show(util.i18n('backupPath'), [ {
 			label: '{{:backupPath}}',
 			name: 'path',

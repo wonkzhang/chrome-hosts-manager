@@ -155,6 +155,13 @@ define(function(require, exports) {
 	};
 
 	/**
+	 * 当前系统是否支持写入hosts文件
+	 */
+	exports.canWrite = function() {
+		return model.get('writeStorage') == '1';
+	};
+
+	/**
 	 * 解析数据
 	 */
 	exports.parseData = model.parseData;
@@ -194,4 +201,8 @@ define(function(require, exports) {
 	 */
 	exports.getData = model.get;
 
+	/**
+	 * 取文件内容
+	 */
+	exports.loadContent = model.loadContent;
 });
