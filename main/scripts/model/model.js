@@ -78,11 +78,17 @@ define(function(require, exports) {
 	};
 
 	/**
+	 * 从hosts文件加载内容
+	 */
+	exports.loadContent = function() {
+		return model.readFile(exports.getHostsPath());
+	};
+
+	/**
 	 * 从hosts文件加载数据
 	 */
 	exports.loadData = function() {
-		var file = exports.getHostsPath(),
-		content = model.readFile(file),
+		var content = exports.loadContent(),
 		data = {},
 		i, c;
 		if (content) {
