@@ -103,12 +103,11 @@ define(function(require, exports) {
 	/**
 	 * 加载数据
 	 */
-	exports.loadData = function(noCache) {
-		if (noCache || !model.get('data')) {
-			return model.loadData();
-		} else {
-			return model.get('data');
-		}
+	exports.loadData = function(cacheType) {
+        if(cacheType === 'hosts') {
+            return model.loadData('hosts');
+        }
+        return !model.get('data') ? model.loadData('storage') : model.get('data');
 	};
 
 	/**

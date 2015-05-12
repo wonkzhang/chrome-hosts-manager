@@ -6,10 +6,10 @@ define(function(require, exports) {
 
 	// 业务逻辑
 	var biz = require('./biz.js'),
-	
+
 	// 工具集
 	util = require('../util/util.js'),
-	
+
 	// 弹出消息
 	tip = require('../util/tip.js'),
 
@@ -201,8 +201,10 @@ define(function(require, exports) {
 	 * 编辑按钮
 	 */
 	exports.edit = function(target) {
-		var data = target.closest('.node').data('target'),
-		fields = biz.editFields(data);
+		var data = target.closest('.node').data('target');
+        console.log('exports.edit data : ', data);
+		var fields = biz.editFields(data);
+
 		editor.show(target.data('title'), fields, function(err, nData) {
 			if (err) { // 输入校验
 				tip.showErrorTip(err);
@@ -289,7 +291,11 @@ define(function(require, exports) {
 	/**
 	 * 刷新数据
 	 */
-	exports.refresh = function(refresh) {
+	exports.refresh = function(refresh, cacheType) {
+
+        //默认从storage中获取数据
+        cacheType = cacheType || 'storage';
+
 		var val = $('#hostsPath').val();
 		if (!val) {
 			tip.showErrorTip(util.i18n('blankPath'));
@@ -300,15 +306,20 @@ define(function(require, exports) {
 		} else {
 			try {
 				biz.setHostsPath(val);
-				var data = biz.loadData(true),
-				content = $('#content').html(''),
+                //从hosts文件读取数据或者从model中读取缓存数据
+				var data = biz.loadData(cacheType),
+                //主要内容的容器
+                content = $('#content').html(''),
+
 				blocks = $('<ul class="blocks clearfix"></ul>'),
 				projs = {},
 				block, lines, i;
+
 				if (data.error) {
 					tip.showErrorTip(util.i18n(data.error));
 					delete data.error;
 				}
+
 				for (i in data) {
 					block = $('<li class="block"></li>').appendTo(blocks);
 					data[i].setTarget($(groupRender.render(data[i])).appendTo(block));
@@ -321,7 +332,9 @@ define(function(require, exports) {
 						projs[$.trim(i.split('==@')[1])] = true;
 					}
 				}
+
 				content.append(blocks);
+
 				groupFilterInit(projs);
 				if (mark('currentTab')) {
 					filterCurrentTab();
@@ -337,6 +350,15 @@ define(function(require, exports) {
 			}
 		}
 	};
+
+    /**
+     * 强制从hosts文件加载
+     */
+    exports.hostsRefresh = function(refresh) {
+        if(window.confirm('确定要从hosts文件中重新载入?\n这个操作会导致所有的浏览器缓存被覆盖.')){
+            exports.refresh(refresh, 'hosts');
+        };
+    };
 
 	/**
 	 * 备份数据
@@ -424,7 +446,8 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * 导入多行hosts数据
+	 * 导入功能
+     * 多行hosts数据
 	 */
 	exports.imports = function(target) {
 		var node = target.closest('.node');

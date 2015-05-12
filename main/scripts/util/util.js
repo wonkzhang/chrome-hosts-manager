@@ -5,7 +5,8 @@ define(function(require, exports) {
 	'require:nomunge,exports:nomunge,module:nomunge';
 
 	// 后台页工具集
-	var util = chrome.extension.getBackgroundPage().util,
+	//var util = chrome.extension.getBackgroundPage().util,
+    var util = require('../util/back.js').util,
 
 	// 是否是合法的IPv4地址
 	isV4 = function(ip) {
@@ -87,6 +88,10 @@ define(function(require, exports) {
 		});
 	};
 
+//    exports.getCurrentTab = function(callback) {
+//        callback({});
+//    };
+
 	/**
 	 * 文件是否存在
 	 */
@@ -101,5 +106,5 @@ define(function(require, exports) {
 	 * 获取国际化文案
 	 */
 	exports.i18n = chrome.i18n.getMessage;
-
+    //exports.i18n = function() {}
 });

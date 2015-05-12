@@ -33,7 +33,7 @@
 }
 
 #content .line {
-	height: 16px;
+	height: 25px;
 	padding-left: .7em;
 	overflow: hidden;
 }
@@ -44,7 +44,7 @@
 }
 #content .line .ip {
 	float: left;
-	width: 135px;
+	width: 200px;
 }
 #content .line .domain {
 	float: left;

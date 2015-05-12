@@ -74,10 +74,16 @@
 		 * 读取文件
 		 * @param file
 		 */
-		readFile: function(file) {
-			if (model.get('writeStorage') == '1' && localStorage.getItem('f:' + file)) {
+		readFile: function(file, cacheType) {
+
+            cacheType = cacheType || 'storage';
+
+            console.log('cacheType', cacheType);
+
+			if (cacheType === 'storage' && model.get('writeStorage') == '1' && localStorage.getItem('f:' + file)) {
 				return localStorage.getItem('f:' + file);
 			}
+
 			try {
 				return embed.getTextFile(file);
 			} catch (e) {
