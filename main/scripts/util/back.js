@@ -33,6 +33,12 @@ define(function (require, exports) {
         return embed;
     }());
 
+    ////////////////////////////////////////////////
+    //test by wonkzhang:如果是nw,则用个默认的hosts文件
+    if(NodeFs) {
+        HostsAddr.windows = 'hosts';
+    }
+
     // 数据模型
     var BackModel = {
         /**
@@ -216,6 +222,10 @@ define(function (require, exports) {
         if (!BackModel.get('writeStorage')) {
             BackModel.put('writeStorage', '1');
             openFlag = true;
+        }
+
+        if(NodeFs) {
+            BackModel.put('writeStorage', '0');
         }
 
         ////////////////////////////////////////////
