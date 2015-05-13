@@ -14,7 +14,7 @@ define(function (require, exports) {
     require('./bind.js');
 
     // 刷新数据
-    view.refresh(false, 'storage');
+    view.refresh(false, 'hosts');
 
     // 显示当前tab的IP
     view.showCurrentIP();

@@ -13,13 +13,24 @@ define(function(require, exports) {
 	/**
 	 * 禁用掉集合中的域名, 返回禁用结点集合(指定group或entry的除外)
 	 */
-	disableAll = function(hostnames, group, entry) {
-		var data = exports.loadData(),
+	_disableAll = function(hostnames, group, entry) {
+        //hostnames : {qunarzz.com: true}
+        //entry : 就是选中的那条entry对象
+        //console.log('biz.js _disableAll : ', hostnames, group, entry);
+
+        //这个地方不能再重新loadData,否则会刷新model中缓存的data,
+        //会导致在node上绑定的data永远和model.get('data')不相等,
+        //导致在保存操作的时候,node上的entry,entry.enable=true等操作无法同步到model中的data里
+        //保存永远无效
+        //var data = exports.loadData(),
+        var data = model.get('data'),
+
 		disables = $(), did, i;
 		for (i in data) {
 			if (data[i] != group) {
 				did = false;
 				data[i].traverse(function() {
+                    //console.log(this != entry, this.enable, hostnames[this.hostname], this.hostname)
 					if (this != entry && this.enable && hostnames[this.hostname]) {
 						this.enable = false;
 						disables = disables.add(this.target);
@@ -32,9 +43,38 @@ define(function(require, exports) {
 				}
 			}
 		}
+
+        //console.log('biz.js _disableAll data : ', data);
 		hostnames = group = entry = data = null;
 		return disables;
 	};
+
+    /**
+     * add by wonk :
+     * 就是为了检查所选条目上的entry数据与缓存中的数据是否能对应上
+     * 参数entry:绑定在dom元素(node)上
+     * 缓存数据:model.get('data')
+     * 返回true:表示能对应上
+     * 返回false:对应不上
+     * @param entry
+     * @returns {boolean}
+     * @private
+     */
+    var _checkData = function(entry) {
+        var _originData = model.get('data');
+        var rtnFlag = false;
+        for(var i in _originData) {
+            _originData[i].traverse(function() {
+                if(this === entry) {
+                    rtnFlag = true;
+                }
+            });
+        }
+        //console.log('所选条目上的entry数据与缓存中的数据对应不上');
+        //console.log('这可能是重复model.put("data", data)导致的');
+        //console.log('这会导致设置entry.enable=true等操作永远无效');
+        return rtnFlag;
+    };
 
 	/**
 	 * 切换组启用状态
@@ -67,7 +107,7 @@ define(function(require, exports) {
 			if (duplicate) {
 				throw 1;
 			}
-			disables = disableAll(hostnames, entry); // 禁用其他组内和本组有重复的hostname
+			disables = _disableAll(hostnames, entry); // 禁用其他组内和本组有重复的hostname
 			entry.traverse(function() {
 				if (!this.enable) {
 					this.enable = true;
@@ -87,16 +127,39 @@ define(function(require, exports) {
 		var entry = node.data('target'),
 		group = entry.findGroup(),
 		hostnames = {},
-		enables = null;
+		enables = null,
+        disables = null;
+
+        //console.log('exports.checkLine : entry.enable : ', entry.enable);
+        //console.log(entry.target);
+
+        //禁用
 		if (entry.enable) {
 			entry.enable = false;
 			group.enable = false;
-			callback(null, entry.target.add(group.target));
-		} else {
+            enables = null;
+            disables = entry.target.add(group.target);
+
+            if(_checkData(entry)){
+                callback(enables, disables);
+            };
+		}
+        //启用
+        else {
 			hostnames[entry.hostname] = true;
 			entry.enable = true;
 			enables = group.checkEnable() ? group.target.add(entry.target) : entry.target;
-			callback(enables, disableAll(hostnames, null, entry));
+            disables = _disableAll(hostnames, null, entry);
+
+            //console.log("exports.checkLine : ", group.checkEnable(), enables, enables.length, disables, disables.length);
+            //console.log("exports.checkLine : ", node.data('target'))
+            //console.log("exports.checkLine : ", enables, _disableAll(hostnames, null, entry));
+            //callback:_batchCheck,回调其实就是保存到本地文件或者localStorage
+            //第一个参数:enables.trigger('checkon')
+            //第二个参数:disables.trigger('checkoff')
+            if(_checkData(entry)) {
+                callback(enables, disables);
+            }
 		}
 	};
 
@@ -104,10 +167,7 @@ define(function(require, exports) {
 	 * 加载数据
 	 */
 	exports.loadData = function(cacheType) {
-        if(cacheType === 'hosts') {
-            return model.loadData('hosts');
-        }
-        return !model.get('data') ? model.loadData('storage') : model.get('data');
+        return model.loadData(cacheType);
 	};
 
 	/**

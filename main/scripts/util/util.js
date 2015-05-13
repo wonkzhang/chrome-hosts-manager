@@ -6,7 +6,7 @@ define(function(require, exports) {
 
 	// 后台页工具集
 	//var util = chrome.extension.getBackgroundPage().util,
-    var util = require('../util/back.js').util,
+    var BackUtil = require('../util/back.js').BackUtil,
 
 	// 是否是合法的IPv4地址
 	isV4 = function(ip) {
@@ -78,33 +78,58 @@ define(function(require, exports) {
 	 * @param callback 参数为当前tab
 	 */
 	exports.getCurrentTab = function(callback) {
-		chrome.tabs.query({
-			windowId: chrome.windows.WINDOW_ID_CURRENT,
-			active: true
-		}, function(tabs) {
-			if (tabs && tabs[0]) {
-				callback(tabs[0]);
-			}
-		});
+        ////////////////////////////////////////////////////////
+        if(chrome && chrome.tabs && chrome.tabs.query) {
+            chrome.tabs.query({
+                windowId: chrome.windows.WINDOW_ID_CURRENT,
+                active: true
+            }, function(tabs) {
+                if (tabs && tabs[0]) {
+                    callback(tabs[0]);
+                }
+            });
+        } else {
+            callback({});
+        }
 	};
-
-//    exports.getCurrentTab = function(callback) {
-//        callback({});
-//    };
 
 	/**
 	 * 文件是否存在
 	 */
-	exports.fileExists = util.fileExists;
+	exports.fileExists = BackUtil.fileExists;
 
 	/**
 	 * 路径是否是目录
 	 */
-	exports.isDirectory = util.isDirectory;
+	exports.isDirectory = BackUtil.isDirectory;
 
 	/**
 	 * 获取国际化文案
 	 */
-	exports.i18n = chrome.i18n.getMessage;
-    //exports.i18n = function() {}
+    /////////////////////////////////////////////
+	//exports.i18n = chrome.i18n.getMessage;
+    exports.i18n = (function() {
+
+        if(chrome.i18n && chrome.i18n.getMessage) {
+            return chrome.i18n.getMessage;
+        }
+
+        var _cache = {},
+            _iFlag = 'zh_CN';//'en'
+
+        $.ajax({
+            async: false,
+            dataType: 'json',
+            success: function (data) {
+                _cache = data;
+            },
+            url: '_locales/' + _iFlag + '/messages.json'
+        });
+
+        return function(key){
+            //console.log(_cache)
+            return _cache[key] && _cache[key].message || '未知';
+        }
+
+    })()
 });

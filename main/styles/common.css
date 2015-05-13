@@ -36,6 +36,7 @@ body {
     max-height: 400px;
     overflow-x: hidden;
     overflow-y: auto;
+    width:700px;
 }
 
 #content::-webkit-scrollbar {
@@ -108,7 +109,6 @@ body {
 }
 
 #content .blocks {
-    width: 600px;
     padding: 0 12px 0 8px;
 }
 

@@ -29,7 +29,7 @@ define(function(require, exports) {
 	headRender = new Render('headTemp'),
 
 	// 标记(setter/getter)
-	mark = function(key, value) {
+	_mark = function(key, value) {
 		if (typeof value == 'undefined') {
 			return biz.getData(key);
 		} else {
@@ -40,8 +40,10 @@ define(function(require, exports) {
 	/**
 	 * 保存文件
 	 */
-	saveData = function(file) {
+	_saveData = function(file) {
+        //console.log('view.js _saveData  file : ', file);
 		try {
+            //如果file文件路径为空,则取默认的文件路径
 			biz.saveData(file);
 			file && setTimeout(function() {
 				tip.showInfoTip(util.i18n('saveSuccess'));
@@ -52,6 +54,16 @@ define(function(require, exports) {
 			return false;
 		}
 	},
+
+    /**
+     * 批量启用/禁用
+     */
+    _batchCheck = function(enables, disables) {
+        if (_saveData()) {
+            enables && enables.trigger('checkon');
+            disables && disables.trigger('checkoff');
+        }
+    };
 
 	/**
 	 * 筛选当前标签页的绑定
@@ -75,7 +87,7 @@ define(function(require, exports) {
 						toHide.addClass('hidden');
 					}
 				}
-				mark('currentTab', '1');
+				_mark('currentTab', '1');
 				data = null;
 			}
 		});
@@ -94,25 +106,25 @@ define(function(require, exports) {
 				data[i].target.closest('.block').addClass('hidden');
 			}
 		}
-		mark('currentProject', project);
+		_mark('currentProject', project);
 	},
 
 	/**
 	 * 组筛选初始化
 	 */
 	groupFilterInit = function(projs) {
-		var selected = mark('currentProject'),
+		var selected = _mark('currentProject'),
 		select, i;
 		if (!$.isEmptyObject(projs)) {
 			select = $('select');
 			if (select.length == 0) {
 				select = $('<select>');
 				select.change(function() {
-					mark('currentTab', '');
+					_mark('currentTab', '');
 					if (this.selectedIndex) {
 						filterCurrentProject(this.options[this.selectedIndex].text);
 					} else {
-						mark('currentProject', '');
+						_mark('currentProject', '');
 						$('#content .hidden').removeClass('hidden');
 					}
 				});
@@ -132,28 +144,23 @@ define(function(require, exports) {
 	},
 
 	/**
-	 * 批量启用/禁用
-	 */
-	batchCheck = function(enables, disables) {
-		if (saveData()) {
-			enables && enables.trigger('checkon');
-			disables && disables.trigger('checkoff');
-		}
-	};
-
-	/**
 	 * 切换启用/禁用按钮
 	 */
 	exports.check = function(target) {
 		var node = target.closest('.node');
 		if (node.hasClass('group')) {
 			try {
-				biz.checkGroup(node, batchCheck);
+                //_batchCheck保存到文件
+				biz.checkGroup(node, _batchCheck);
 			} catch (e) {
 				tip.showErrorTip(util.i18n('duplicates'));
 			}
 		} else {
-			biz.checkLine(node, batchCheck);
+            //console.log('view.js exports.check : ', node, _batchCheck);
+            //_batchCheck保存到文件
+            //biz.js中的checkLine:切换行的状态,并且执行回调_batchCheck
+            //entry = node.data('target')
+			biz.checkLine(node, _batchCheck);
 		}
 	};
 
@@ -179,7 +186,7 @@ define(function(require, exports) {
 					data.line = line;
 				}
 				biz.addGroup(data);
-				saveData();
+				_saveData();
 				setTimeout(function() {
 					exports.refresh(false);
 				}, 0);
@@ -202,7 +209,7 @@ define(function(require, exports) {
 	 */
 	exports.edit = function(target) {
 		var data = target.closest('.node').data('target');
-        console.log('exports.edit data : ', data);
+        //console.log('exports.edit data : ', data);
 		var fields = biz.editFields(data);
 
 		editor.show(target.data('title'), fields, function(err, nData) {
@@ -217,7 +224,7 @@ define(function(require, exports) {
 				node = $(render.render(data));
 				data.target.replaceWith(node);
 				data.setTarget(node);
-				saveData() && editor.hide();
+				_saveData() && editor.hide();
 			}
 		});
 	};
@@ -232,7 +239,7 @@ define(function(require, exports) {
 				delete biz.loadData()[data.line];
 			}
 			data.delink();
-			saveData();
+			_saveData();
 			target.trigger('remove');
 		});
 	};
@@ -246,7 +253,7 @@ define(function(require, exports) {
 			var group = target.closest('.group'),
 			collapse = target.hasClass('collapse');
 			group.data('target').hide = collapse;
-			if (saveData()) {
+			if (_saveData()) {
 				if (collapse) { // 收缩已经展开的
 					group.next().slideUp(function() {
 						target.removeClass('collapse lock').addClass('expand');
@@ -294,7 +301,7 @@ define(function(require, exports) {
 	exports.refresh = function(refresh, cacheType) {
 
         //默认从storage中获取数据
-        cacheType = cacheType || 'storage';
+        cacheType = cacheType || 'hosts';
 
 		var val = $('#hostsPath').val();
 		if (!val) {
@@ -315,6 +322,7 @@ define(function(require, exports) {
 				projs = {},
 				block, lines, i;
 
+                //console.log('view.js exports.refresh data : ', cacheType, data);
 				if (data.error) {
 					tip.showErrorTip(util.i18n(data.error));
 					delete data.error;
@@ -325,6 +333,7 @@ define(function(require, exports) {
 					data[i].setTarget($(groupRender.render(data[i])).appendTo(block));
 					lines = $('<ul>').appendTo(block);
 					data[i].hide && lines.hide();
+                    //这步把entry绑定到dom元素上
 					data[i].traverse(function() {
 						this.setTarget($(lineRender.render(this)).appendTo(lines));
 					});
@@ -333,15 +342,18 @@ define(function(require, exports) {
 					}
 				}
 
+                //console.log('view.js data is the same : ', data === biz.getData('data'));
+
 				content.append(blocks);
+                blocks.css('display', 'block');
 
 				groupFilterInit(projs);
-				if (mark('currentTab')) {
+				if (_mark('currentTab')) {
 					filterCurrentTab();
-				} else if (mark('currentProject')) {
-					filterCurrentProject(mark('currentProject'));
+				} else if (_mark('currentProject')) {
+					filterCurrentProject(_mark('currentProject'));
 				}
-				blocks.css('display', 'block');
+
 				if (refresh !== false) {
 					tip.showInfoTip(util.i18n('loadSuccess'));
 				}
@@ -359,6 +371,10 @@ define(function(require, exports) {
             exports.refresh(refresh, 'hosts');
         };
     };
+
+    exports.storageRefresh = function(refresh) {
+        exports.refresh(refresh, 'storage');
+    }
 
 	/**
 	 * 备份数据
@@ -384,13 +400,13 @@ define(function(require, exports) {
 				tip.showErrorTip(util.i18n('blankPath'));
 			} else if (util.fileExists(data.path)) {
 				tip.showInfoTip(util.i18n('overwrite'), function() {
-					saveData(data.path);
+					_saveData(data.path);
 					editor.hide();
 				});
 			} else if (util.isDirectory(data.path)) {
 				tip.showErrorTip(util.i18n('noDirectory'));
 			} else {
-				saveData(data.path) && editor.hide();
+				_saveData(data.path) && editor.hide();
 			}
 		});
 	};
@@ -415,11 +431,11 @@ define(function(require, exports) {
 	 * 显示当前路径的绑定
 	 */
 	exports.current = function() {
-		if (mark('currentTab')) {
+		if (_mark('currentTab')) {
 			$('#content .hidden').removeClass('hidden');
-			mark('currentTab', '');
+			_mark('currentTab', '');
 		} else {
-			mark('currentProject', '');
+			_mark('currentProject', '');
 			$('select').each(function(i, n) {
 				n.selectedIndex = 0;
 			});
@@ -463,7 +479,7 @@ define(function(require, exports) {
 				} else {
 					biz.parseData(fragment);
 				}
-				saveData();
+				_saveData();
 				exports.refresh(false);
 			}
 			editor.hide();

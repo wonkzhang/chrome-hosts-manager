@@ -9,7 +9,7 @@ define(function (require, exports) {
 
     // 后台页数据模型
     //var model = chrome.extension.getBackgroundPage().model,
-    var model = require('../util/back.js').model,
+    var BackModel = require('../util/back.js').BackModel,
 
         // 工具集
         util = require('../util/util.js'),
@@ -20,28 +20,29 @@ define(function (require, exports) {
         /**
          * 使用代理让变更立即生效
          */
-        doProxy = function (array) {
-            var script = '', i;
-            for (i = 0; i < array.length; i++) {
-                script += '}else if(host=="' + array[i].hostname + '"){';
-                script += 'return "PROXY ' + array[i].addr + ':80; DIRECT";';
+        _doProxy = function (array) {
+            if(chrome && chrome.proxy && chrome.proxy.settings && chrome.proxy.settings.set) {
+                var script = '', i;
+                for (i = 0; i < array.length; i++) {
+                    script += '}else if(host=="' + array[i].hostname + '"){';
+                    script += 'return "PROXY ' + array[i].addr + ':80; DIRECT";';
+                }
+                chrome.proxy.settings.set({
+                    value: {
+                        mode: 'pac_script',
+                        pacScript: {
+                            data: 'function FindProxyForURL(url,host){if(shExpMatch(url,"http:*")){if(isPlainHostName(host)){return "DIRECT";' +
+                                script + '}else{return "DIRECT";}}else{return "DIRECT";}}'
+                        }
+                    },
+                    scope: 'regular'
+                }, $.noop);
             }
-            chrome.proxy.settings.set({
-                value: {
-                    mode: 'pac_script',
-                    pacScript: {
-                        data: 'function FindProxyForURL(url,host){if(shExpMatch(url,"http:*")){if(isPlainHostName(host)){return "DIRECT";' +
-                            script + '}else{return "DIRECT";}}else{return "DIRECT";}}'
-                    }
-                },
-                scope: 'regular'
-            }, $.noop);
         },
 
         manifest = {
             version : '0.3.5'
         };
-        //console.log('model.js --> model --> ', model);
 
     // 加载manifest.json文件
     /**
@@ -58,23 +59,23 @@ define(function (require, exports) {
     /**
      * 存储数据
      */
-    exports.put = model.put;
+    exports.put = BackModel.put;
 
     /**
      * 获取数据
      */
-    exports.get = model.get;
+    exports.get = BackModel.get;
 
     /**
      * 删除数据
      */
-    exports.remove = model.remove;
+    exports.remove = BackModel.remove;
 
     /**
      * 添加组
      */
     exports.addGroup = function (groupData) {
-        var data = model.get('data') || exports.loadData(),
+        var data = BackModel.get('data') || exports.loadData(),
             group = data[groupData.line] || new Entry(groupData.line),
             entry = new Entry();
         data[groupData.line] = group;
@@ -90,13 +91,12 @@ define(function (require, exports) {
      * 从hosts文件加载内容
      */
     exports.loadContent = function (cacheType) {
-
         var hostPath = exports.getHostsPath(),
-            content = model.readFile(hostPath, cacheType);
+            content = BackModel.readFile(hostPath, cacheType);
+        return content;
 
         //C:\Windows\system32\drivers\etc\hosts
         //console.log('exports.loadContent, hostPath : ', hostPath);
-
         /**
          *
          # user center
@@ -116,12 +116,10 @@ define(function (require, exports) {
          #192.168.237.73    qunarzz.com
          */
         //console.log('exports.loadContent, content : ', content);
-
-        return content;
     };
 
     /**
-     * 从hosts文件加载数据
+     * 从localStorage或者hosts文件中加载数据
      */
     exports.loadData = function (cacheType) {
         //看exports.loadContent中关于content的定义
@@ -129,6 +127,7 @@ define(function (require, exports) {
             data = {},
             i, c;
 
+        //console.log('exports.loadData content : ', content);
         if (content) {
             for (i = 0; i < content.length; i++) { // 扫描非utf8字符
                 c = content.charAt(i);
@@ -139,8 +138,9 @@ define(function (require, exports) {
             }
             exports.parseData(content, data);
         } else {
-            model.put('data', data);
+            BackModel.put('data', {});
         }
+
         return data;
     };
 
@@ -154,7 +154,7 @@ define(function (require, exports) {
             //如果没有data,则从model中去取
             //如果没有data,则从hosts文件中导入
             //data的格式是
-            data = data || model.get('data') || exports.loadData(),
+            data = data || BackModel.get('data') || exports.loadData(),
             i, c, d, entry;
 
         //类似这样的数组:['# user center', '192.168.235.63 user.qunar.com', '192.168.235.63 headshot.user.qunar.com']
@@ -210,18 +210,12 @@ define(function (require, exports) {
          **/
         //console.log('exports.parseData data : ', data);
 
-        //        for(var i in data) {
-        //            console.log('\n exports.parseData data : ', i, data[i]);
-        //        }
-
         for (i in data) {
             if (i != 'error') {
                 data[i].checkEnable();
             }
         }
-
-        model.put('data', data);
-
+        BackModel.put('data', data);
         return data;
     };
 
@@ -229,34 +223,47 @@ define(function (require, exports) {
      * 保存数据到指定文件
      */
     exports.saveData = function (file) {
-        var data = model.get('data'),
-            method = model.get('method'),
+        var data = BackModel.get('data'),
+            method = BackModel.get('method'),
             array = [],
             content = '', i;
+
+        //console.log('model.js exports.saveData : ', method, data);
         if (method == 'clearCache') {
             for (i in data) {
                 //调用的是Entry的toString()
                 content += data[i].toString();
             }
-            model.saveFile(file || exports.getHostsPath(), content);
+            //如果file文件路径为空,则取默认的文件路径
+            BackModel.saveFile(file || exports.getHostsPath(), content);
+
             setTimeout(function () {
                 bm.clearCache();
                 bm.clearHostResolverCache();
                 bm.clearPredictorCache();
                 bm.closeConnections();
             }, 0);
-        } else if (method == 'useProxy') {
+        }
+        //启用/关闭代理
+        else if (method == 'useProxy') {
+            //console.log('model.js exports.saveData content : ', data);
+            //每个元素都是一个entry
             for (i in data) {
                 content += data[i].toString();
                 data[i].pushEnables(array);
             }
-            model.saveFile(file || exports.getHostsPath(), content);
-            doProxy(array);
+
+            //console.log('model.js exports.saveData content : ', content, data);
+            //如果file文件路径为空,则取默认的文件路径
+            BackModel.saveFile(file || exports.getHostsPath(), content);
+
+            _doProxy(array);
+
         } else {
             for (i in data) {
                 content += data[i].toString();
             }
-            model.saveFile(file || exports.getHostsPath(), content);
+            BackModel.saveFile(file || exports.getHostsPath(), content);
         }
     };
 
@@ -264,14 +271,17 @@ define(function (require, exports) {
      * 设置hosts文件路径
      */
     exports.setHostsPath = function (path) {
-        model.put('hostsPath', path);
+        BackModel.put('hostsPath', path);
     };
 
     /**
      * 获取hosts文件路径(优先手动设置的值,其次默认值)
      */
     exports.getHostsPath = function () {
-        return model.get('hostsPath') || model.getHostsPath();
+        //var hostsPath = BackModel.get('hostsPath') || BackModel.getHostsPath();
+        var hostsPath = BackModel.getHostsPath();
+        //console.log('exports.getHostsPath hostsPath : ', hostsPath, BackModel.getHostsPath());
+        return hostsPath;
     };
 
     /**
