@@ -7,6 +7,8 @@ define(function(require, exports) {
 	// 业务逻辑
 	var biz = require('./biz.js'),
 
+    Drop = require('./drop.js'),
+
 	// 工具集
 	util = require('../util/util.js'),
 
@@ -295,6 +297,44 @@ define(function(require, exports) {
 		}));
 	};
 
+    /**
+     * 文件拖拽上传
+     */
+    exports.renderDropUpload = function() {
+
+        var _uploadFunc = function(resultText, dropTargetEl) {
+            //console.log('view.js resultText : ', resultText);
+            resultText = $.trim(resultText) || '';
+
+            if(!resultText) {return;}
+
+            var $target = $(dropTargetEl),
+                groupName = '刚刚添加的host组';
+
+            //判断是否在组内拖拽,如果是,则取组名
+            if($target.length) {
+                var $group = $target.closest('.j-group-item').find('.group');
+                if($group.length) {
+                    groupName = $group.data('target') && $group.data('target').line || groupName;
+                }
+            }
+
+            //解析数据
+            biz.parseData(resultText, null, groupName);
+            //保存数据
+            _saveData();
+            //刷新列表
+            exports.refresh(false);
+        };
+
+        $.each(['dropUploadArea', 'content'], function(i, v){
+            new Drop({
+                elId : v,
+                uploadFunc : _uploadFunc
+            });
+        });
+    };
+
 	/**
 	 * 刷新数据
 	 */
@@ -329,7 +369,7 @@ define(function(require, exports) {
 				}
 
 				for (i in data) {
-					block = $('<li class="block"></li>').appendTo(blocks);
+					block = $('<li class="block j-group-item"></li>').appendTo(blocks);
 					data[i].setTarget($(groupRender.render(data[i])).appendTo(block));
 					lines = $('<ul>').appendTo(block);
 					data[i].hide && lines.hide();
@@ -372,6 +412,10 @@ define(function(require, exports) {
         };
     };
 
+    /**
+     * 强制从localStorage加载
+     * @param refresh
+     */
     exports.storageRefresh = function(refresh) {
         exports.refresh(refresh, 'storage');
     }
@@ -462,8 +506,8 @@ define(function(require, exports) {
 	};
 
 	/**
-	 * 导入功能
-     * 多行hosts数据
+	 * 导入功能,多行hosts数据
+     * 分两种:一种是页面顶部的全局导入,另外一种是导入到组内
 	 */
 	exports.imports = function(target) {
 		var node = target.closest('.node');
@@ -471,15 +515,24 @@ define(function(require, exports) {
 			label: target.data('title'),
 			name: 'imports',
 			type: 'textarea'
-		}], function(err, data) {
+		}],
+        //data : {imports: "127.0.0.3 localhost"}
+        function(err, data) {
+            //console.log('view.js exports.imports : ', data, err);
+            //data.imports就是导入的内容.
 			var fragment = $.trim(data.imports) || '';
 			if (fragment) {
+                //如果是组内导入
 				if (node.hasClass('group')) {
 					biz.parseData(fragment, null, node.data('target').line);
-				} else {
+				}
+                //如果是全局导入
+                else {
 					biz.parseData(fragment);
 				}
+
 				_saveData();
+
 				exports.refresh(false);
 			}
 			editor.hide();

@@ -16,7 +16,7 @@ if (typeof require === 'function') {
 define(function (require, exports) {
     'require:nomunge,exports:nomunge,module:nomunge';
 
-    var Config = require('./config.js').Config;
+    var Config = require('./config.js');
     
     //hosts默认地址
     var HostsAddr = Config.HostsAddr || {};

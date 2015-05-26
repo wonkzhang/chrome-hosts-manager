@@ -125,8 +125,13 @@ define(function(require, exports, module) {
 		 * 解析
 		 */
 		analysis: function(line) {
-			var regQute = /^#+/;
-			line = $.trim(line);
+            line = $.trim(line);
+
+            var regQute = /^#+/,
+                oriLine = line;
+
+            //console.log('line : ', line)
+            //console.log('/^#*\s*[0-9A-Za-z:\.]+\s+[^#]+/.test(line)', /^#*\s*[0-9A-Za-z:\.]+\s+[^#]+/.test(line))
 			if (/^#*\s*[0-9A-Za-z:\.]+\s+[^#]+/.test(line)) {
 				this.enable = !regQute.test(line); // 是否启用
 				if (!this.enable) {
@@ -138,6 +143,15 @@ define(function(require, exports, module) {
 					line = $.trim(line.substring(0, index));
 				}
 				line = line.split(/\s+/);
+
+                //console.log('line.length : ', line, line.length, util.isValidIP(line[0]));
+                //if(line.length <= 1) {
+                    //console.log(oriLine, '-> ip或者主机名残缺,自动忽略');
+                //}
+                //if(line.length > 1 && !util.isValidIP(line[0])) {
+                    //console.log(oriLine, '-> 注释行,空行,或者不是一个合法的IP地址,自动忽略');
+                //}
+
 				if (line.length > 1 && util.isValidIP(line[0])) { // 是合法的IP地址
 					this.addr = line[0];
 					this.hostname = line[1];

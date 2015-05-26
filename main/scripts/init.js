@@ -9,6 +9,7 @@ define(function (require, exports) {
 
     // 渲染头
     view.renderHead();
+    view.renderDropUpload();
 
     // 绑定事件
     require('./bind.js');
@@ -18,4 +19,6 @@ define(function (require, exports) {
 
     // 显示当前tab的IP
     view.showCurrentIP();
+
+    require('./util/open.js');
 });

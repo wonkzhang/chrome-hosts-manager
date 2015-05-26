@@ -10,6 +10,10 @@ body {
     color: #362b36;
 }
 
+.fl {
+    float: left;
+}
+
 .selectable {
     -webkit-user-select: text;
 }
@@ -270,7 +274,8 @@ select:hover {
 
 .groupFilter {
     height: 40px;
-    padding: 15px;
+    width: 100px;
+    padding: 10px;
     background: -webkit-linear-gradient(top, #fff 0%, #e3f1fa 20%, #d7ebf9 80%, #fff 100%);
     radius: 5px;
 }

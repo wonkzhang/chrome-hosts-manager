@@ -1,3 +1,5 @@
+
+
 <!doctype html>
 <html>
 <head>
@@ -9,7 +11,11 @@
         <div class="version selectable"><b>{{:appName}}</b> v{{version}}</div>
         <div class="panel">
             <span class="hosts-path">{{:hostsPath}}</span>
-            <input id="hostsPath" class="hosts-editor" value="{{hostsPath}}"/>
+
+            <span><input id="hostsPath" class="hosts-editor" value="{{hostsPath}}"/></span>
+
+            <span><input type="file" name="hostsToUpload" id="hostsToUpload"/></span>
+
             <!--bind.js中绑定点击,点击后调用view.js中同名exports方法-->
             <span class="icon fade link" data-title="{{:link}}" data-handle="link"></span>
             <span class="icon fade refresh" data-title="{{:refresh}}" data-handle="storageRefresh"></span>
@@ -21,6 +27,7 @@
         </div>
     </script>
 
+    <!--分组的包含组名的那部分内容-->
     <script type="text/template" id="groupTemp">
         <div class="group node clearfix">
             <div class="name">
@@ -37,6 +44,7 @@
         </div>
     </script>
 
+    <!--组内单个条目-->
     <script type="text/template" id="lineTemp">
         <li class="line node clearfix">
             <div class="ip">
@@ -54,6 +62,7 @@
         </li>
     </script>
 
+    <!--漂浮窗,例如导入窗口等,包含操作按钮-->
     <script type="text/template" id="olTemp">
         <table>
             <tr>
@@ -95,17 +104,6 @@
 </head>
 
 <body>
-    <div id="mask">
-        <div id="overlay"></div>
-    </div>
-    <div id="titleTip" class="hidden"></div>
-    <div id="errorTip" class="hidden"><span></span><span class="icon close" data-handle="close"></span></div>
-    <div id="infoTip" class="hidden">
-        <span></span>
-        <span class="icon confirm" data-handle="confirm"></span>
-        <span class="icon close" data-handle="close"></span>
-    </div>
-
     <!--这里js动态调用模板插入-->
     <!--插入版本号-->
     <!--插入hosts文件地址和各种操作按钮-->
@@ -113,11 +111,38 @@
     <!--容器:主要内容-->
     <div id="content"></div>
 
-    <!--容器:组筛选-->
-    <div id="groupFilter" class="groupFilter"></div>
+    <div style="width: 650px; height: 50px;">
+        <!--容器:组筛选-->
+        <div id="groupFilter" class="groupFilter fl"></div>
 
-    <!--容器:ip地址-->
-    <div id="currentIP"></div>
+        <!--拖拽试验区域-->
+        <div id="dropUploadArea" class="dropArea fl">
+            <div id="_d_tip" class="tip">
+                <span>把hosts文件拖拽到这里全局上传</span>
+            </div>
+            <!--进度条-->
+            <div class="canvasW" id="_d_canvas_w" style="display: none">
+                <canvas id="_d_canvas" width="500" height="20" class="canvas"></canvas>
+            </div>
+        </div>
+
+        <!--容器:ip地址-->
+        <div id="currentIP" class="fl"></div>
+    </div>
+
+    <!--导入等弹出框-->
+    <div id="mask">
+        <div id="overlay"></div>
+    </div>
+
+    <!--提示区域-->
+    <div id="titleTip" class="hidden"></div>
+    <div id="errorTip" class="hidden"><span></span><span class="icon close" data-handle="close"></span></div>
+    <div id="infoTip" class="hidden">
+        <span></span>
+        <span class="icon confirm" data-handle="confirm"></span>
+        <span class="icon close" data-handle="close"></span>
+    </div>
 
     <script src="./scripts/lib/jquery.js"></script>
     <script src="./scripts/lib/sea.js" id="seajsnode" data-main="./scripts/init.js"></script>

@@ -4,9 +4,9 @@
  * 把一些常用的配置内容都放到这里来
  * 如果是chrome插件模式,还可以在option页面中去配置
  */
-define(function(require, exports){
+define(function(require, exports, module){
     'require:nomunge,exports:nomunge,module:nomunge';
-    exports.Config = (function(){
+    var Config = (function(){
 
         var Config = {};
 
@@ -26,4 +26,6 @@ define(function(require, exports){
 
         return Config
     }());
+
+    module.exports = Config;
 });

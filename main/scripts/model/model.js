@@ -1,6 +1,57 @@
 /**
  * 数据模型
- */
+     data格式为:
+     data = {
+        //组名
+        "user center" : {
+            //组没有地址属性(一律为空)
+            addr : "",
+            //描述注释
+            comment : "",
+            //true是启用,false是不启用
+            enable : false,
+            hide : false,
+            //主机名,组时为空
+            hostname : "",
+            //组名
+            line : "user center",
+            //下一个元素,如果出现循环,例如this.next==this自身,那就说明没有下一个元素了.
+            next : Entry对象
+        },
+        "dev" : {
+
+        }
+     };
+
+ //Entry对象格式为:
+ {
+    addr : "",
+    comment : "",
+    enable : false,
+    hide : false,
+    hostname : "",
+    line : "user center",
+    next : Entry对象
+    }
+
+ 导入数据的格式:
+     # user center //这是组名
+     #192.168.235.63    l-api.user.qunar.com # 单条注释注释注释注释 //注意,这里的#后表示单条注释
+     #192.168.235.63    api.user.qunar.com
+
+     # dev //这是组名
+     #192.168.237.71    simg2.qunarzz.com
+     #192.168.237.71    simg1.qunarzz.com
+
+     # test==@qzz //这是工程名,其中test是工程名,==@是分隔符,分隔符之后为组名
+     #127.0.0.2	   qunarzz.com
+
+     # test==@fekit //这是工程名,其中test是工程名,==@是分隔符,分隔符之后为组名
+     #127.0.0.2    qunarzz.com
+     #192.168.237.73	qunarzz.com
+     #192.168.237.74	qunarzz.com
+     #192.168.235.63	l-api.user.qunar.com
+ **/
 define(function (require, exports) {
     'require:nomunge,exports:nomunge,module:nomunge';
 
@@ -94,27 +145,8 @@ define(function (require, exports) {
         var hostPath = exports.getHostsPath(),
             content = BackModel.readFile(hostPath, cacheType);
         return content;
-
         //C:\Windows\system32\drivers\etc\hosts
         //console.log('exports.loadContent, hostPath : ', hostPath);
-        /**
-         *
-         # user center
-         #192.168.235.63    l-api.user.qunar.com
-         #192.168.235.63    api.user.qunar.com
-         #192.168.235.63    upload.user.qunar.com
-         #192.168.235.63    headshot.user.qunar.com
-         #192.168.235.63    uicon.qunar.com
-         #192.168.235.63    user.qunar.com
-
-         # dev
-         #192.168.237.71    simg2.qunarzz.com
-         #192.168.237.71    simg1.qunarzz.com
-         #127.0.0.1    qunarzz.com
-         #10.86.51.252    trade.qunar.com
-         #192.168.228.96    fuwu.qunar.com
-         #192.168.237.73    qunarzz.com
-         */
         //console.log('exports.loadContent, content : ', content);
     };
 
@@ -148,18 +180,16 @@ define(function (require, exports) {
      * 解析数据
      */
     exports.parseData = function (dataStr, data, group) {
-
         var content = dataStr.split(/\r?\n/),
             //优先使用传入的data
             //如果没有data,则从model中去取
             //如果没有data,则从hosts文件中导入
-            //data的格式是
+            //必须是这个顺序,因为还存在导入,导入是依赖于当前缓存的data基础之上
             data = data || BackModel.get('data') || exports.loadData(),
             i, c, d, entry;
 
         //类似这样的数组:['# user center', '192.168.235.63 user.qunar.com', '192.168.235.63 headshot.user.qunar.com']
         //console.log('exports.parseData content : ', content, content.join(','));
-
         for (i = 0; i < content.length; i++) {
             entry = new Entry();
             if (entry.analysis(content[i])) { // 是合法记录
@@ -176,46 +206,16 @@ define(function (require, exports) {
                 group = entry.line;
             }
         }
-
         //每个data是名字=Entry对象的键值对
-        //Entry对象格式为:
-        /**
-         {
-            addr : "",
-            comment : "",
-            enable : false,
-            hide : false,
-            hostname : "",
-            line : "user center",
-            next : Entry对象
-            }
-         */
-
-        //data格式为:
-        /**
-         data = {
-            "user center" : {
-                addr : "",
-                comment : "",
-                enable : false,
-                hide : false,
-                hostname : "",
-                line : "user center",
-                next : Entry对象
-            },
-            "dev" : {
-
-            }
-         };
-         **/
         //console.log('exports.parseData data : ', data);
-
         for (i in data) {
             if (i != 'error') {
                 data[i].checkEnable();
             }
         }
+        //执行绑定操作
         BackModel.put('data', data);
+
         return data;
     };
 

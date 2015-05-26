@@ -1,5 +1,6 @@
 @import url("common.css");
 @import url("icons.css");
+@import url("drop.css");
 
 #content .blocks {
 	display: none;
@@ -19,7 +20,7 @@
 #content .group .name {
 	float: left;
 	width: 290px;
-	height: 16px;
+	height: 22px;
 	overflow: hidden;
 	font-weight: bold;
 }

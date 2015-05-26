@@ -19,7 +19,7 @@ define(function(require, exports, module) {
 
 	Render.prototype = {
 
-		/**
+		/**]\]\
 		 * 将对象渲染到模板
 		 * 以下几种形式将被变量替换:
 		 * {{:text}} 从国际化文件中获取text
