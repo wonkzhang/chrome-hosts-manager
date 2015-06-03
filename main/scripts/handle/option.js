@@ -8,7 +8,7 @@ define(function(require, exports) {
 	var model = chrome.extension.getBackgroundPage().model,
 
 	// 渲染器
-	Render = require('./model/render.js'),
+	Render = require('../model/render.js'),
 
 	// 选项渲染器
 	optionRender = new Render('optionTemp'),

@@ -1,3 +1,7 @@
+/**
+ * 已废弃
+ * chrome插件的背景文件,已用back.js替代
+ */
 (function(embed, data) {
 
 	// 数据模型

@@ -7,7 +7,8 @@ define(function(require, exports) {
 	// 业务逻辑
 	var biz = require('./biz.js'),
 
-    Drop = require('./drop.js'),
+    //文件上传拖拽
+    Drop = require('../util/drop.js'),
 
 	// 工具集
 	util = require('../util/util.js'),
@@ -559,4 +560,14 @@ define(function(require, exports) {
 	 */
 	exports.close = tip.close;
 
+    /**
+     * 打开chrome
+     * @param callback
+     */
+    exports.renderOpenChrome = function(callback) {
+        $('#j-showChrome').on('click', function(e) {
+            callback.call(this);
+            return false;
+        });
+    };
 });

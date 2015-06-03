@@ -1,6 +1,6 @@
 {
 	"background": {
-		//"scripts": [ "scripts/background.js" ]
+		//"scripts": [ "scripts/util/background.js" ]
 	},
 	"browser_action":	{
 		"default_icon": {

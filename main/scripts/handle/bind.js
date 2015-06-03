@@ -5,7 +5,7 @@ define(function (require, exports) {
     'require:nomunge,exports:nomunge,module:nomunge';
 
     // 视图逻辑
-    var view = require('./handle/view.js');
+    var view = require('./view.js');
 
     $('body')
 

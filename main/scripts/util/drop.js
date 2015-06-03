@@ -1,6 +1,7 @@
 /**
  * author : wonkzhang
  * date : 20150513
+ * 文件上传拖拽功能
  */
 define(function (require, exports, module) {
     'require:nomunge,exports:nomunge,module:nomunge';
